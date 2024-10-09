@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Formulario de solicitud de empleo</title>
+        <link type="text/css" rel="stylesheet" href="/estilos/general.css">
+        <link type="text/css" rel="stylesheet" href="/estilos/formulario.css">
+    </head>
+    <body>
+        <header>Solicitud de empleo</header>
+        <form method="POST" action="/ra3/forms/solicitud_empleo.php">
+            <!-- Información personal --> 
+            <fieldset>
+                <legend>Datos personales</legend>
+                <label for="nombre">Nombre completo</label>
+                <input type="text" name="nombre" id="nombre" size="50" required 
+                    placeholder="Introduce aquí tu nombre completo">
+
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" size="40" required>
+
+                <label for="clave">Clave</label>
+                <input type="password" name="clave" id="clave" size="10" required>
+
+                <label for="linkedin">Perfil de Linkedin</label>
+                <input type="url" name="linkedin" id="linkedin" size="50"> 
+
+            </fieldset>
+
+            <!-- Detalles del trabajo -->
+            <fieldset>
+                <legend>Detalles del trabajo</legend>
+                <label for="fecha_disponible">Fecha disponibilidad</label>
+                <input type="date" name="fecha_disponible" id="fecha_disponible" required>
+
+                <label for="hora_entrevista">Hora entrevista</label>
+                <input type="time" name="hora_entrevista" id="hora_entrevista" required>
+
+                <label for="salario">Expectativa salarial</label>
+                <input type="number" name="salario" id="salario" required min="1000">
+
+            </fieldset>
+
+            <!-- Preferencias del puesto -->
+            <fieldset>
+                <legend>Preferencias del puesto</legend>
+                <label>Áreas de trabajo preferidas</label>
+                <div>
+                    <input type="checkbox" name="areas[]" id="area1" value="ds">Desarrollo Software<br>
+                    <input type="checkbox" name="areas[]" id="area2" value="dg">Diseño gráfico<br>
+                    <input type="checkbox" name="areas[]" id="area3" value="mk">Marketing<br>
+                    <input type="checkbox" name="areas[]" id="area4" value="rh">Recursos Humanos<br>
+                </div>
+            </fieldset>
+
+
+            <input type="submit" name="operacion" value="Enviar">
+        
+        </form>
+    </body>
+</html>

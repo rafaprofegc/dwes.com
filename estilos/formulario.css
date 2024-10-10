@@ -6,6 +6,8 @@ fieldset {
     align-items: center;
     gap: 0.2em;
 
+    margin-bottom: 1em;
+
 }
 
 label {
@@ -14,7 +16,7 @@ label {
     color: darkblue;
 }
 
-input {
+input, select, option, textarea {
     padding: 0.2em;
     font: inherit;
 }

@@ -52,6 +52,34 @@
                     <input type="checkbox" name="areas[]" id="area3" value="mk">Marketing<br>
                     <input type="checkbox" name="areas[]" id="area4" value="rh">Recursos Humanos<br>
                 </div>
+
+                <label for="modalidad">Modalidad de trabajo</label>
+                <div>
+                    <input type="radio" name="modalidad" id="modalidad1" value="presencial">Presencial<br>
+                    <input type="radio" name="modalidad" id="modalidad2" value="teletrabajo">Teletrabajo<br>
+                    <input type="radio" name="modalidad" id="modalidad3" value="hibrido">Híbrido<br>
+                </div>
+
+                <label for="tipo_contrato">Tipo de contrato</label>
+                <select name="tipo_contrato" id="tipo_contrato" size="1">
+                    <option value="">Seleccione uno...</option>
+                    <option value="tiempo_completo">Tiempo completo</option>
+                    <option value="media_jornada">Media jornada</option>
+                    <option value="freelance">Freelance</option>
+                </select>
+
+                <label for="habilidades">Habilidades</label>
+                <select name="habilidades[]" id="habilidades" multiple size="5">
+                    <option value="js">Javascript</option>
+                    <option value="py">Python</option>
+                    <option value="uxui">Diseño UX/UI</option>
+                    <option value="seo">SEO/SEM</option>
+                    <option value="gp">Gestión de proyectos</option>
+                </select>
+
+                <label for="comentarios">Comentarios</label>
+                <textarea name="comentarios" id="comentarios" placeholder="Cuéntame más sobre ti"
+                    rows="4" cols="40"></textarea>
             </fieldset>
 
 

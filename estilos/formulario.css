@@ -16,7 +16,7 @@ label {
     color: darkblue;
 }
 
-input, select, option, textarea {
+input, select, option, textarea, button {
     padding: 0.2em;
     font: inherit;
 }

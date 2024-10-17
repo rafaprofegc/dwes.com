@@ -15,7 +15,6 @@ if( $_SERVER['REQUEST_METHOD'] == "POST" ) {
         echo "<table>";
         echo "<caption>Importación de " . $_FILES['archivo_csv']['name'] . "</caption>";
         echo "<thead>";
-        
 
         $archivo = fopen($_FILES['archivo_csv']['tmp_name'], "r");
         if( $archivo ) {
@@ -28,24 +27,38 @@ if( $_SERVER['REQUEST_METHOD'] == "POST" ) {
                 foreach( $cabecera as $columna ) {
                     echo "<th>$columna</th>";
                 }
-                echo "</tr>";
+                echo "</tr>" . PHP_EOL;
+                echo "</thead>";
+                echo "<tbody>";
             }
 
             // Presentamos los datos
-            echo "<tbody>";
+            $cabecera_insertada = False;
+            $registros = 0;
             while( $fila = fgetcsv($archivo)) {
+                ++$registros;
+                if( !$fila_cabecera && !$cabecera_insertada) {
+                    echo "<thead><tr>";
+                    for( $i = 0; $i < count($fila); $i++ ) {
+                        echo "<th>Campo_{$i}</th>";
+                    }
+                    echo "</tr></thead>" . PHP_EOL;
+                    $cabecera_insertada = True;
+                    echo "<tbody>";
+                }
 
-                
+
                 echo "<tr>";
                 foreach( $fila as $campo) {
                     echo "<td>$campo</td>";
                 }
-                echo "</tr>";
+                echo "</tr>" . PHP_EOL;
             }
             echo "</tbody>";
             fclose($archivo);
         }
         echo "</table>";
+        echo "<p>Se han importado $registros registros<br>";
         echo "<a href='{$_SERVER['PHP_SELF']}'>Importar otro archivo</a>";
 
     }

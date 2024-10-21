@@ -216,9 +216,41 @@ if( $_SERVER['REQUEST_METHOD'] == "POST") {
     }
 
     $peso_float = floatval($peso4);
-    
 
+    // Validación de los datos de una lista
+    $patologias4 = filter_input(INPUT_POST, 'patologias_previas', 
+                FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
 
+    $valores_validos = ["osteoporosis", "diabetes", "colesterol", "arterioesclerosis", "anemia"];
+
+    /* Si la lista solo tiene un valor
+    if( in_array( $patologias4, $valores_validos) ) {
+        echo "Patologías: $patologias4<br>";
+    }
+    else {
+        echo "Patologías: Error, hay una que no vale<br>";
+    }
+    */
+    $todo_ok = True;
+    foreach( $patologias4 as $patologia ) {
+        if( !in_array($patologia, $valores_validos) ) {
+            $todo_ok = False;
+            break;
+        }
+    }
+    if( $todo_ok ) {
+        echo "Patologías: " . implode(", ", $patologias4) . "<br>";
+    }
+    else {
+        echo "Patologías: Error. Hay patologías que no son válidas<br>";
+    }
+
+    for($i = 0; $i < count($patologias4); $i++) {
+        if( !in_array($patologias[$i], $valores_validos) ) {
+            unset($patologias[$i]);
+        }
+    }
+    echo "Patologías (solo las buenas): " . implode(", ", $patologias) . "<br>";
 
 
 
@@ -265,7 +297,7 @@ else {
         <label for="patologias_previas">Patologías previas</label>
         <select name="patologias_previas[]" id="patologias_previas" multiple size="5">
             <option value="osteoporosis">Osteoporosis</option>
-            <option value="diabetes">Diabetes</option>
+            <option value="verrugas">Diabetes</option>
             <option value="colesterol">Hipercolesterolemia</option>
             <option value="anemia">Anemia</option>
             <option value="arterioesclerosis">Arterioesclerosis</option>

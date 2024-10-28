@@ -62,6 +62,27 @@ if( $_SERVER['REQUEST_METHOD'] == "GET" ) {
         $color_texto = "black";
     }
 
+    formulario_cookies($color_fondo, $color_texto);
+
+}
+
+elseif( $_SERVER['REQUEST_METHOD'] == "POST" ) {
+    if( isset($_POST['color_fondo']) && isset($_POST['color_texto'])) {
+        $color_fondo = filter_input(INPUT_POST, 'color_fondo', FILTER_SANITIZE_SPECIAL_CHARS);
+        $color_texto = filter_input(INPUT_POST, 'color_texto', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if( array_key_exists($color_fondo, $colores_validos) && 
+            array_key_exists($color_texto, $colores_validos)) {
+            setcookie("color_fondo", $color_fondo, time() + 60 * 60, "/ra4/cookies"); 
+            setcookie("color_texto", $color_texto, time() + 60 * 60, "/ra4/cookies");
+        }
+    }
+    formulario_cookies($color_fondo, $color_texto);
+}
+
+function formulario_cookies($color_fondo, $color_texto) {
+    global $colores_validos;
+
     inicio_html("Cookies", ["/estilos/general.css", "/estilos/formulario.css"]);
     echo "<div style='background-color:$color_fondo;color:$color_texto'>";
     echo "<header>Gestión de cookies</header>";
@@ -90,19 +111,6 @@ if( $_SERVER['REQUEST_METHOD'] == "GET" ) {
     </div>
     FORM3;
     fin_html();
-}
-
-elseif( $_SERVER['REQUEST_METHOD'] == "POST" ) {
-    if( isset($_POST['color_fondo']) && isset($_POST['color_texto'])) {
-        $color_fondo = filter_input(INPUT_POST, 'color_fondo', FILTER_SANITIZE_SPECIAL_CHARS);
-        $color_texto = filter_input(INPUT_POST, 'color_texto', FILTER_SANITIZE_SPECIAL_CHARS);
-
-        if( array_key_exists($color_fondo, $colores_validos) && 
-            array_key_exists($color_texto, $colores_validos)) {
-            setcookie("color_fondo", $color_fondo, time() + 60 * 60, "/ra4/cookies"); 
-        }
-    }
 
 }
-
 ?>

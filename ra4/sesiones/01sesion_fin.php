@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+if( !isset($_SESSION['cesta']) ) {
+    header("Location: /ra4/sesiones/01sesion_inicio.php");
+}
+
 require_once($_SERVER['DOCUMENT_ROOT'] . "/ra4/sesiones/01sesion_include.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/includes/funciones.php");
 

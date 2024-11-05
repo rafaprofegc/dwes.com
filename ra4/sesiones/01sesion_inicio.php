@@ -55,13 +55,13 @@ inicio_html("Sesiones en PHP", ["/estilos/general.css", "/estilos/formulario.css
 echo "<header>Mi cesta de Navidad</header>";
 ver_datos_sesion();
 
-if( $_SERVER['REQUEST_METHOD'] == "GET" && $_SERVER['HTTP_REFERER'] == "01sesion_fin.php") {
+if( $_SERVER['REQUEST_METHOD'] == "GET") {
     $operacion = filter_input(INPUT_GET, 'operacion', FILTER_SANITIZE_SPECIAL_CHARS);
     if( $operacion == 'cerrar') {
         cerrar_sesion();
+        ver_datos_sesion();
     }
 }
-ver_datos_sesion();
 ?>
 
 <form action="/ra4/sesiones/01sesion_datos.php" method="POST">

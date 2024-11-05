@@ -1,6 +1,14 @@
 <?php
 session_start();
 
+if( !isset($_SESSION['nombre']) || !isset($_SESSION['email']) ) {
+    header("Location: /ra4/sesiones/01sesion_inicio.php");
+}
+
+if( !isset($_SESSION['cesta'])) {
+    $_SESSION['cesta'] = [];
+}
+
 date_default_timezone_set("Europe/Madrid");
 
 require_once($_SERVER['DOCUMENT_ROOT'] . "/includes/funciones.php");

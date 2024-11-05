@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+if( !isset($_SESSION['cesta']) ) {
+    $_SESSION['cesta'] = [];
+}
+
 require_once($_SERVER['DOCUMENT_ROOT'] . "/includes/funciones.php");
 require_once("01sesion_include.php");
 

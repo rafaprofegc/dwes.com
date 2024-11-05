@@ -2,7 +2,12 @@
 function ver_datos_sesion() {
     echo "<p>";
     echo "Id de sesión: " . session_id() . "<br>";
-    echo "Momento de creación: " . date("D, d F Y G:i:s", $_SESSION['instante']) . "<br>";
+    if( isset($_SESSION['instante']) ) {
+        echo "Momento de creación: " . date("D, d F Y G:i:s", $_SESSION['instante']) . "<br>";
+    }
+    else {
+        echo "Momento de creación: no está definido<br>";
+    }
     echo "Nombre: " . (isset($_SESSION['nombre']) ? $_SESSION['nombre'] : "El nombre todavía no se ha definido");
     echo "<br>"; 
     echo "Email: " . (isset($_SESSION['email']) ? $_SESSION['email'] : "El email todavía no se ha definido"); 
@@ -21,6 +26,9 @@ function cerrar_sesion() {
         $parametros_cookie['secure'], $parametros_cookie['httponly'] );
 
     // 2º Destruir las variables de sesión
+    session_unset();
+
+    // 3º Destruir los datos de la sesión
     session_destroy();
 }
 ?>

@@ -20,3 +20,13 @@ input, select, option, textarea, button {
     padding: 0.2em;
     font: inherit;
 }
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form img {
+    width: 128px;
+}

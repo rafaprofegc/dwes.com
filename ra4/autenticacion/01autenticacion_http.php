@@ -35,6 +35,8 @@
 
 session_start();
 
+define("INTENTOS_MAX", 3);
+
 $usuarios = ['manuel01' => ['nombre' => "Manuel García", 'clave' => hash("sha512", "abc123")],
              'maria02'  => ['nombre' => "María López", 'clave' => hash("sha512", "123abc")]
 ];
@@ -49,11 +51,16 @@ foreach( $usuarios as $usuario ) {
 }
 */
 
+if (isset($_SESSION['intentos']) && $_SESSION['intentos'] >= INTENTOS_MAX) {
+    echo "<h3>Has superado el número maximo de intentos</h3>";
+    fin_html();
+    exit;
+}
+
 $authOk = False;
 if( isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) ) {
     $usuario = htmlspecialchars($_SERVER['PHP_AUTH_USER']);
-    $password = htmlspecialchars($_SERVER['PHP_AUTH_PW']);
-
+    $password = $_SERVER['PHP_AUTH_PW'];
 
     if( array_key_exists($usuario, $usuarios) ) {
         $password_hasheada = hash("sha512", $password);
@@ -65,6 +72,13 @@ if( isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) ) {
 }
 
 if( !$authOk ) {
+
+    if( isset($_SESSION['intentos']) ){
+        $_SESSION['intentos'] = $_SESSION['intentos'] + 1;
+    }
+    else {
+        $_SESSION['intentos'] =  1;
+    }
 
     header("WWW-Authenticate: Basic realm='Zona restringida'");
     header("HTTP/1.1 401 Unauthorized");

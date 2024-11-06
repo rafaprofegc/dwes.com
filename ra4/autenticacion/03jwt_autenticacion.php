@@ -60,9 +60,29 @@ if( $_SERVER['REQUEST_METHOD'] == "POST") {
 
     if( autentica_usuario($login, $clave) ) {
         // Autenticación ha tenido éxito
-        $_SESSION['usuario'] = $login;
-        $_SESSION['nombre'] = $usuarios[$login]['nombre'];
-        $_SESSION['perfil'] = $usuarios[$login]['perfil'];
+        // Empieza la generación del token JWT
+
+        // Genero el array con los datos de usuario
+
+        $usuario = [
+            'id'       =>    $login,
+            'username' => $usuarios[$login]['nombre'],
+            'role'     => $usuarios[$login]['perfil']
+        ];
+
+        if( file_exists("03clave.txt") ) {
+            $fichero_clave = fopen("03clave.txt", "r");
+            $clave = fgets($fichero_clave);
+            fclose($fichero_clave);
+        }
+        else {
+            $clave = "abc123";
+        }
+
+        $jwt = generar_token($usuario, $clave);
+
+        
+
 
         header("Location: /ra4/autenticacion/02bienvenida.php");
     }

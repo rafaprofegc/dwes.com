@@ -14,7 +14,9 @@
     - Por defecto, PASSWORD_DEFAULT utiliza el algoritmo BCRYPT con un coste de 10
 */
 
-session_start();
+session_start(['gc_maxlifetime' => 60 * 60]);
+
+date_default_timezone_set("Europe/Madrid");
 
 require_once($_SERVER['DOCUMENT_ROOT'] . "/includes/funciones.php");
 
@@ -65,7 +67,7 @@ if( $_SERVER['REQUEST_METHOD'] == "POST") {
         // Genero el array con los datos de usuario
 
         $usuario = [
-            'id'       =>    $login,
+            'id'       => $login,
             'username' => $usuarios[$login]['nombre'],
             'role'     => $usuarios[$login]['perfil']
         ];
@@ -81,10 +83,16 @@ if( $_SERVER['REQUEST_METHOD'] == "POST") {
 
         $jwt = generar_token($usuario, $clave);
 
+        echo "<p>El token generado: $jwt</p>";
+
+        // El tiempo de validez del jwt es 1 hora
+        $expire = time() + 60 * 60;
+
+        // Se establece la cookie para enviar el jwt al cliente
+        // setcookie("jwt", $jwt, $expire, "/", "dwes.com", true, true);
+        setcookie("jwt", $jwt, $expire, "/", "dwes.com");
         
-
-
-        header("Location: /ra4/autenticacion/02bienvenida.php");
+        echo "<p>Usuario autenticado. Vaya a la <a href='03jwt_bienvenido.php'>zona restringida</a></p>";        
     }
     else {
         // La autenticación no ha tenido éxito

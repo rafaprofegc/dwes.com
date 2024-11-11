@@ -1,6 +1,6 @@
 <?php
 
-function generar_token(array $usuario, string $clave) {
+function generar_token(array $usuario) {
 
     $jwt = "";
 
@@ -16,6 +16,15 @@ function generar_token(array $usuario, string $clave) {
     $cabecera_base64_limpio = str_replace(["+", "/", "="],["-", "_", ""], $cabecera_base64);
     $payload_base64_limpio = str_replace(["+", "/", "="],["-", "_", ""], $payload_base64);
 
+    if( file_exists("03clave.txt") ) {
+        $fichero_clave = fopen("03clave.txt", "r");
+        $clave = fgets($fichero_clave);
+        fclose($fichero_clave);
+    }
+    else {
+        $clave = "abc123";
+    }
+    
     // Creo la firma
     $firma = hash_hmac("sha256", 
                        $cabecera_base64_limpio . "." . $payload_base64_limpio,
@@ -28,7 +37,7 @@ function generar_token(array $usuario, string $clave) {
     return $jwt;
 }
 
-function verificar_token($jwt) {
+function verificar_token($jwt): mixed {
 
     // Compruebo que el token tiene 3 partes
     $partes = explode(".", $jwt);
@@ -51,9 +60,17 @@ function verificar_token($jwt) {
     $firma_base64 = base64_encode($firma);
     $firma_base64_nuevo = str_replace(['+','/','='],['-','_',''],$firma_base64);
 
-    
+    if( $firma_base64_limpio != $firma_base64_nuevo ) {
+        return false;
+    }
 
-    
+    // Aquí, el JWT es válido
+    // Obtenemos el payload (datos de usuario) del JWT
+    $payload_base64 = str_replace(['-','_',''], ['+','/','='], $payload_base64_limpio);
+    $payload_json = base64_decode($payload_base64);
+    $payload = json_decode($payload_json, true);
+
+    return $payload;
 
 }
 

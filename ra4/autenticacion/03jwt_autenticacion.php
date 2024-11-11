@@ -19,6 +19,7 @@ session_start(['gc_maxlifetime' => 60 * 60]);
 date_default_timezone_set("Europe/Madrid");
 
 require_once($_SERVER['DOCUMENT_ROOT'] . "/includes/funciones.php");
+require_once("03jwt_include.php");
 
 $usuarios = ['manuel@hotmail.com' => ['nombre' => 'Manuel García',
                                       'password' => password_hash("abc123", PASSWORD_DEFAULT),
@@ -72,16 +73,7 @@ if( $_SERVER['REQUEST_METHOD'] == "POST") {
             'role'     => $usuarios[$login]['perfil']
         ];
 
-        if( file_exists("03clave.txt") ) {
-            $fichero_clave = fopen("03clave.txt", "r");
-            $clave = fgets($fichero_clave);
-            fclose($fichero_clave);
-        }
-        else {
-            $clave = "abc123";
-        }
-
-        $jwt = generar_token($usuario, $clave);
+        $jwt = generar_token($usuario);
 
         echo "<p>El token generado: $jwt</p>";
 

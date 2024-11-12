@@ -90,6 +90,20 @@ if( $emp1->esIgual($emp2) ) {
 else {
     echo "<p>Emp1 y Emp2 son diferentes</p>";
 }
+
+// 11º Objeto como devolución de un método
+echo "<p>Nif: {$emp1->nif}. Salario: {$emp1->salario}</p>";
+$emp6 = $emp1->salarioDuplicado();
+echo "<p>Nif: {$emp6->nif}. Salario: {$emp6->salario}</p>";
+
+// Puedo instanciar un objeto mediante una variable que
+// contiene el nombre de la clase
+$clase = "Empleado";
+$emp1 = new $clase("30000002B", "María", "López Martínez", 3000);
+
+$propiedad = "nif";
+echo "<p>El nif es {$emp1->$propiedad}</p>";
+
 fin_html()
 
 ?>

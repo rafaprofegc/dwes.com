@@ -11,7 +11,8 @@ echo "<header>Métodos mágicos en PHP</header>";
 $dir1 = new Direccion("C/", "Mayor", 3, 2, "A", 4, "B", 28000, "Madrid");
 
 echo "<h3>Sobrecarga de propiedades</h3>";
-$dir1->setTipoVia("Av");
+// $dir1->setTipoVia("Av");
+$dir1->tipo_via = "Av";
 
 echo "<p>{$dir1->tipo_via} $dir1->nombre_via , $dir1->numero</p>";
 $dir1->nombre_via = "Cervantes";
@@ -96,5 +97,27 @@ $emp3->cc = ["789", "012"];
 
 echo "$emp1";
 echo "$emp3";
+
+// Sobrecarga de métodos
+// El método setTipoVia() es privado
+echo "<h3>Sobrecarga de métodos</h3>";
+$dir1->setTipoVia("Crta");
+echo $dir1;
+
+
+// Invoco un método que no existe en la clase Dirección
+$dir1->esteMetodoNoExiste();
+
+// Wrapper de métodos
+$dir1->cambiarVia("Av");
+$dir1->cambiarCalle("Carlos III");
+echo $dir1;
+
+// Información de depuración
+echo "<br>";
+var_dump($dir1);
+
+
+echo "<h3>Destrucción de los objetos</h3>";
 
 ?>

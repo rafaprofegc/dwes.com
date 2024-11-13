@@ -13,6 +13,10 @@ class Direccion {
 
     private const array TIPOS_VIAS = ["C/", "Av", "Pz", "Ps", "Crta"];
 
+    private const array MAPEO_METODOS = ['cambiarVia' => 'setTipoVia',
+                                         'cambiarCalle' => 'setNombreVia',
+                                         'ponVia'       => 'setTipoVia'];
+
     public function __construct(string $tv, string $nv, int $nu, int $po, string $es,
                                 int $pl, string $pu, int $cp, string $lo) {
 
@@ -32,11 +36,15 @@ class Direccion {
         return $this->tipo_via;
     }
 
-    public function setTipoVia(string $tv): void {
+    private function setTipoVia(string $tv): void {
         if( in_array($tv, self::TIPOS_VIAS) ) 
             $this->tipo_via = $tv;
         else
             $this->tipo_via = null;
+    }
+
+    private function setNombreVia(string $nombre): void {
+        $this->nombre_via = $nombre;
     }
 
     public function __get(string $propiedad): mixed {
@@ -93,7 +101,36 @@ class Direccion {
 
     // Sobrecarga de métodos
     public function __call(string $metodo, array $argumentos): mixed {
-        
+        if( method_exists(self::class, $metodo ) ) {
+            // El método existe
+            // Es no accesible (es privado o protegido)
+            return $this->$metodo(...$argumentos);
+        }
+        else {
+            // El método no existe
+            // echo "<p>No existe el método $metodo</p>"; 
+            // return null;
+
+            // A veces se usa un método no existente
+            // para hacer un Wrapper
+            if( array_key_exists($metodo, self::MAPEO_METODOS) ) {
+                $metodo_real = self::MAPEO_METODOS[$metodo];
+                return $this->$metodo_real(...$argumentos);
+            }
+            else {
+                echo "<p>No existe el método $metodo</p>"; 
+                return null;
+            }
+
+        }        
+    }
+
+    public function __debugInfo(): array {
+        $salida = [];
+        foreach($this as $propiedad => $valor) {
+            $salida[$propiedad] = $valor;
+        }
+        return $salida;
     }
 }
 

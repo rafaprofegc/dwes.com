@@ -93,7 +93,7 @@ class Direccion {
 
     // Sobrecarga de métodos
     public function __call(string $metodo, array $argumentos): mixed {
-        
+        return null;
     }
 }
 

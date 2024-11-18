@@ -89,7 +89,8 @@ function autentica_usuario(string $login, string $password ): mixed {
   }
 }
 if( $_SERVER['REQUEST_METHOD'] == "POST") {
-  $login = filter_input(INPUT_POST, 'login', FILTER_SANITIZE_EMAIL);
+  
+  $login = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
   $login = filter_var($login, FILTER_VALIDATE_EMAIL);
 
   if( !$login ) {
@@ -99,7 +100,7 @@ if( $_SERVER['REQUEST_METHOD'] == "POST") {
   $password = $_POST['password'];
 
   $datos_usuario = autentica_usuario($login, $password);
-  if( $datos_usuarios ) {
+  if( $datos_usuario ) {
     // Autenticación con éxito
     $objeto_usuario = new Usuario($login, $datos_usuario['nombre'], $datos_usuario['perfil'], "$login.log");
     $objeto_usuario->registraActividad("Usuario autenticado con éxito");

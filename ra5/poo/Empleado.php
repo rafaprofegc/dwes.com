@@ -9,9 +9,14 @@ class Empleado {
 
     public array $cc;
 
-    const float IRPF = 0.2;
-    const float SS = 0.05;
-    const float SALARIO_BASE = 2000;
+    public const float IRPF = 0.2;
+    public const float SS = 0.05;
+    public const float SALARIO_BASE = 2000;
+
+    public static float $IRPF = 0.2;
+    public static float $SS = 0.5;
+    public static array $SALARIO_BASE = ['Adm' => 2000, 'Dir' => 3500];
+
 
     public function __construct(string $nif, string $nombre, 
                                 string $apellidos, ?float $salario = null,
@@ -73,5 +78,17 @@ class Empleado {
         $this->direccion = clone $this->direccion;
     }
 
+    // Método estático
+    public static function getPorcentajes(): string {
+        return "IRPF: " . (self::$IRPF * 100) . "%. SS: " . (self::$IRPF * 100) . "%";
+    }
+
+    public static function getFechaFormato($fecha = null): string {
+        $formato_fecha = "d/M/Y G:i:s";
+        if( !$fecha ) {
+            $fecha = time();
+        }
+        return date($formato_fecha, $fecha);
+    }
 }
 ?>

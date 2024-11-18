@@ -29,7 +29,7 @@ class Usuario {
     public function registraActividad(string $descripcion): void {
         if( $this->arc_log ) {
             $formato_fecha = "d/m/Y G:i:s";
-            $actividad = date($formato_fecha) . " -> " . $descripcion;
+            $actividad = date($formato_fecha) . " -> " . $descripcion. "\n";
             fwrite($this->arc_log, $actividad);
         }
     }
@@ -49,5 +49,6 @@ class Usuario {
         if( !$this->arc_log ) 
             $this->arc_log = fopen($this->archivo_log, 'a');
     }
+  
 }
 ?>

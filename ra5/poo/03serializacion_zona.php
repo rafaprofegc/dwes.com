@@ -5,6 +5,7 @@ session_start();
 
 require_once($_SERVER['DOCUMENT_ROOT'] . "/includes/funciones.php");
 
+
 inicio_html("Serialización de objetos en PHP", ["/estilos/general.css"]);
 
 if( isset($_SESSION['usuario']) ) {

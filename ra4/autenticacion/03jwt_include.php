@@ -16,14 +16,7 @@ function generar_token(array $usuario) {
     $cabecera_base64_limpio = str_replace(["+", "/", "="],["-", "_", ""], $cabecera_base64);
     $payload_base64_limpio = str_replace(["+", "/", "="],["-", "_", ""], $payload_base64);
 
-    if( file_exists("03clave.txt") ) {
-        $fichero_clave = fopen("03clave.txt", "r");
-        $clave = fgets($fichero_clave);
-        fclose($fichero_clave);
-    }
-    else {
-        $clave = "abc123";
-    }
+    $clave = leer_clave();
     
     // Creo la firma
     $firma = hash_hmac("sha256", 
@@ -74,9 +67,10 @@ function verificar_token($jwt): mixed {
 
 }
 
-function leer_clave() {
-    if( file_exists("03clave.txt") ) {
-        $fichero_clave = fopen("03clave.txt", "r");
+function leer_clave(): string {
+    $archivo_clave = $_SERVER['DOCUMENT_ROOT'] . "/ra4/autenticacion/03clave.txt";
+    if( file_exists($archivo_clave) ) {
+        $fichero_clave = fopen($archivo_clave, "r");
         $clave = fgets($fichero_clave);
         fclose($fichero_clave);
     }

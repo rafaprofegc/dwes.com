@@ -62,6 +62,16 @@
 */
 
 require_once($_SERVER['DOCUMENT_ROOT']. "/includes/funciones.php");
+
+function mostrar_excepcion($e) {
+    echo "<h3>Error en la aplicación</h3>";
+    echo "<p>Tipo de excepción: " . $e::class . "</p>";
+    echo "<p>Mensaje de error: " . $e->getMessage() . "</p>";
+    echo "<p>Código de error: " . $e->getCode() . "</p>";
+    echo "<p>Archivo: " . $e->getFile() . "</p>";
+    echo "<p>Línea: " . $e->getLine() . "</p>";
+}
+
 inicio_html("Excepciones en PHP", ["/estilos/general.css"]);
 
 // Ejemplo 1: Se lanza una excepción PHP sin gestionar
@@ -95,7 +105,108 @@ catch(TypeError $te) {
 
 }
 
+// Ejemplo 3: Se contemplan 2 excepciones
+try {
+    $x = strpos("h", "hola", 16);
+
+    $numero = "a";
+    $cuadrado = $numero ** 2;
+    echo "<p>El cuadro de número es $numero</p>";
+}
+catch( ValueError $ve ) {
+    mostrar_excepcion($ve);
+}
+catch( TypeError $te ) {
+    mostrar_excepcion($te);
+}
+
+try {
+    $x = strpos("h", "hola", 16);
+
+    $numero = "a";
+    $cuadrado = $numero ** 2;
+    echo "<p>El cuadro de número es $numero</p>";
+}
+catch( TypeError | ValueError $e ) {
+    mostrar_excepcion($e);
+}
 fin_html();
 
+// Ejemplo 5: Cláusula finally. Se ejecuta el código dentro de
+// finally ocurra, o no, la excepción.
+echo "<h3>Cláusula finally</h3>";
+try {
+    $puntero = fopen("manuel@gmail.com.log","r");
+    $numero_lineas = "#";
+    while( $linea = fgets($puntero) ) {
+        $numero_lineas += 1;
+    }
 
+    // Si cierro aquí el archivo y se dispara una
+    // excepción, el archivo se queda abierto
+    echo "<p>El número de líneas es $numero_lineas</p>";
+}
+catch ( TypeError $te ) {
+    mostrar_excepcion($te);
+}
+finally {
+    // Operaciones de limpieza
+    echo "<p>Cerrando el archivo</p>";
+    fclose($puntero);
+}
+
+// Ejemplo 6: El desarrollador lanza excepciones
+echo "<h3>Lanzamiento de excepciones</h3>";
+try {
+    if( !file_exists("manuel@gmail.com.logg") ) {
+        throw new Exception("El archivo no existe", 1000);
+    }
+    else {
+        $puntero = @fopen("manuel@gmail.com.logg","r");
+        while( $fila = fgets($puntero) ) {
+            echo $fila;
+        }
+    }
+}
+catch( Exception $e) {
+    mostrar_excepcion($e);
+}
+
+// Ejemplo 7: Excepciones personalizadas
+echo "<h3>Excepciones personalizadas</h3>";
+
+class AperturaFicheroExcepcion extends Exception {
+    protected array $punto_recuperacion;
+
+    public function __construct(string $message, int $code, 
+            string $url_pr, string $enlace_pr, Exception $previous = null) {
+        
+        parent::__construct($message, $code, $previous);
+        $this->punto_recuperacion['url'] = $url_pr;
+        $this->punto_recuperacion['enlace'] = $enlace_pr;
+    }
+
+    public function __toString(): string {
+        return __CLASS__ . "[{$this->code}]: $this->message";
+    }
+
+    public function getPuntoRecuperacion(): array {
+        return $this->punto_recuperacion;
+    }
+}
+
+try {
+    if( !file_exists("manuel@gmail.com.logg") ) {
+        throw new AperturaFicheroExcepcion("El fichero no existe", 1000, 
+        "http://dwes.com", "Ir al principio de la aplicación");
+    }
+
+    $puntero = fopen("manuel@gmail.com.logg", "r");
+
+}
+catch( AperturaFicheroExcepcion $afe ) {
+    mostrar_excepcion($afe);
+    $pr = $afe->getPuntoRecuperacion();
+    echo "Punto de recuperación: <a href='{$pr['url']}'>{$pr['enlace']}</a></p>"; 
+}
 ?>

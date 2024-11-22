@@ -25,7 +25,7 @@ if( $_SERVER['REQUEST_METHOD'] == "POST") {
     }
     
     inicio_html("Pizzas por encargo", ["/estilos/general.css","/estilos/formulario.css", "/estilos/tablas.css"]);
-    echo "<header>Pizzas por encargao</header>";
+    echo "<header>Pizzas por encargo</header>";
 
     MuestraDatos($payload, $_SESSION['ingredientes'], $_SESSION['vegetariana'] )
 
@@ -42,5 +42,9 @@ if( $_SERVER['REQUEST_METHOD'] == "POST") {
         <input type="submit" value="Terminar la pizza">
     </form>
 <?php
+fin_html();
+}
+else {
+    header("Location: /ra4/actividad/act03_script01.php");
 }
 ?>

@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 /*
     Actividad 3 - Relación RA4
 */
@@ -15,7 +14,7 @@ if( $_SERVER['REQUEST_METHOD'] == "POST" && $operacion == 'Empezar de nuevo' ) {
     // 1º Borrar la cookie
     $nombre_sesion = session_name();
     $cookie_params = session_get_cookie_params();
-    setcookie($nombre_session, "", time() - 100, 
+    setcookie($nombre_sesion, "", time() - 100, 
             $cookie_params['path'], $cookie_params['domain'],
             $cookie_params['secure'], $cookie_params['httponly']);
 
@@ -25,11 +24,8 @@ if( $_SERVER['REQUEST_METHOD'] == "POST" && $operacion == 'Empezar de nuevo' ) {
     // 3º Destruir la sesión
     session_destroy();
 
-    session_start();
-}
-
-if( !isset($_SESSION['inicio']) ) {
-    $_SESSION['inicio'] = time();
+    // 4º Iniciar una nueva sesión
+    session_start();  
 }
 
 require_once($_SERVER['DOCUMENT_ROOT'] . "/includes/funciones.php");

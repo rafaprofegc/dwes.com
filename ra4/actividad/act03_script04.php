@@ -24,16 +24,31 @@ if( $_SERVER['REQUEST_METHOD'] == "POST") {
         exit(2);
     }
 
-    $extra_queso = filter_input(INPUT_POST, 'queso', FILTER_VALIDATE_BOOL);
-    $bordes_rellenos = filter_input(INPUT_POST, 'bordes', FILTER_VALIDATE_BOOL);
+    /* Punto e)
+        Las pizzas suelen incluir ofertas de forma frecuente, así que la duración 
+        de la página final en la caché será de solo 2 días.
+    */
+    
+    $caducidad = gmdate("D, d M Y G:i:s", time() + 60 * 60 * 3) . " GMT";
+    header("Expires: {$caducidad}");
+
+
+    $extra_queso = filter_input(INPUT_POST, 'queso', FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
+    $bordes_rellenos = filter_input(INPUT_POST, 'bordes', FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
+
+    inicio_html("Actividad 03 Mantenimiento de estado", ["/estilos/general.css", "/estilos/formulario.css"]);
+    echo "<header>Pizzas por encargo</header>";
 
     MuestraDatos($payload, $_SESSION['ingredientes'], $_SESSION['vegetariana'], 
                     $extra_queso, $bordes_rellenos);
 ?>
-
     <form action="/ra4/actividad/act03_script01.php" method="POST">
         <input type="submit" name="operacion" id="operacion" value="Empezar de nuevo">
     </form>
 <?php
+fin_html();
+}
+else {
+    header("Location: /ra4/actividad/act03_script01.php");
 }
 ?>

@@ -7,10 +7,11 @@ define("BORDES_RELLENOS", 4);
 function MuestraDatos($payload, $ingredientes, $vegetariana, $eq = false, $br = false) {
 
     echo "<h3>Situación actual de su pedido</h3>";
+    echo "<p>Inicio de la compra: " . date('d/M/Y G:i:s', $_SESSION['inicio']) . "</p>"; 
     echo "<h4>Datos de entrega</h4>";
     echo "<p>Nombre: {$payload['nombre']}<br>";
-    echo "<p>Dirección: {$payload['direccion']}<br>";
-    echo "<p>Teléfono: {$payload['telefono']}<br>";
+    echo "Dirección: {$payload['direccion']}<br>";
+    echo "Teléfono: {$payload['telefono']}</p>";
 
     echo "<h4>Tipo de pizza</h4>";
     echo "<p>" . ($vegetariana ? "Vegetariana" : "NO vegetariana") . "</p>";

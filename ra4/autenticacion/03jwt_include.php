@@ -70,7 +70,7 @@ function verificar_token($jwt): mixed {
 function leer_clave(): string {
     $archivo_clave = $_SERVER['DOCUMENT_ROOT'] . "/ra4/autenticacion/03clave.txt";
     if( file_exists($archivo_clave) ) {
-        $fichero_clave = fopen($archivo_clave, "r");
+        $fichero_clave = @fopen($archivo_clave, "r");
         $clave = fgets($fichero_clave);
         fclose($fichero_clave);
     }

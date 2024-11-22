@@ -40,8 +40,12 @@ function autenticar($usuario, $clave) {
     }                           
 }
 
+if( $_SERVER['REQUEST_METHOD'] == "GET") {
+    header("Location: /ra4/actividad/act03_script01.php");
+}
+
 inicio_html("Pizzas por encargo", ["/estilos/general.css","/estilos/formulario.css", "/estilos/tablas.css"]);
-echo "<header>Pizzas por encargao</header>";
+echo "<header>Pizzas por encargo</header>";
 
 if( $_SERVER['REQUEST_METHOD'] == "POST" && $_POST['operacion'] == "Añadir ingredientes") {
 
@@ -73,8 +77,9 @@ if( $_SERVER['REQUEST_METHOD'] == "POST" && $_POST['operacion'] == "Añadir ingr
     setcookie("token", $jwt, time() + 30 * 60);
 
     $_SESSION['ingredientes'] = [];
+    $_SESSION['inicio'] = time();
     
-    $vegetariana = filter_input(INPUT_POST, 'vegetariana', FILTER_VALIDATE_BOOL);
+    $vegetariana = filter_input(INPUT_POST, 'vegetariana', FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
     $ingredientes_disponibles = $vegetariana ? $ing_veg : $ing_no_veg;
     $_SESSION['ingredientes_disponibles'] = $ingredientes_disponibles;
     $_SESSION['vegetariana'] = $vegetariana;
@@ -102,9 +107,10 @@ elseif( $_SERVER['REQUEST_METHOD'] == "POST" && $_POST['operacion'] == "Otro Ing
     else
         header("Location: /ra4/actividad/act03_script01.php");
 
-    $ingrediente = filter_input(INPUT_POST, 'ingrediente', FILTER_SANITIZE_SPECIAL_CHARS);
+    $ingrediente = filter_input(INPUT_POST, 'ingrediente', FILTER_SANITIZE_NUMBER_INT);
+    $ingrediente = filter_var($ingrediente, FILTER_VALIDATE_INT);
     if( array_key_exists($ingrediente, $ingredientes_disponibles) ) {
-        if( !in_array($ingrediente, $_SESSION['ingredientes']) ) {
+        if( !in_array($ingredientes_disponibles[$ingrediente], $_SESSION['ingredientes']) ) {
             $_SESSION['ingredientes'][] = $ingredientes_disponibles[$ingrediente];
         }
     }

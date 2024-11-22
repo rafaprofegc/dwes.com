@@ -44,9 +44,6 @@ if( $_SERVER['REQUEST_METHOD'] == "GET") {
     header("Location: /ra4/actividad/act03_script01.php");
 }
 
-inicio_html("Pizzas por encargo", ["/estilos/general.css","/estilos/formulario.css", "/estilos/tablas.css"]);
-echo "<header>Pizzas por encargo</header>";
-
 if( $_SERVER['REQUEST_METHOD'] == "POST" && $_POST['operacion'] == "Añadir ingredientes") {
 
     // Recoger los datos
@@ -83,7 +80,9 @@ if( $_SERVER['REQUEST_METHOD'] == "POST" && $_POST['operacion'] == "Añadir ingr
     $ingredientes_disponibles = $vegetariana ? $ing_veg : $ing_no_veg;
     $_SESSION['ingredientes_disponibles'] = $ingredientes_disponibles;
     $_SESSION['vegetariana'] = $vegetariana;
-    
+
+    inicio_html("Pizzas por encargo", ["/estilos/general.css","/estilos/formulario.css", "/estilos/tablas.css"]);
+    echo "<header>Pizzas por encargo</header>";
 }
 elseif( $_SERVER['REQUEST_METHOD'] == "POST" && $_POST['operacion'] == "Otro Ingrediente") {
     if( !isset($_COOKIE['token'])) {
@@ -115,6 +114,8 @@ elseif( $_SERVER['REQUEST_METHOD'] == "POST" && $_POST['operacion'] == "Otro Ing
         }
     }
 
+    inicio_html("Pizzas por encargo", ["/estilos/general.css","/estilos/formulario.css", "/estilos/tablas.css"]);
+    echo "<header>Pizzas por encargo</header>";
     MuestraDatos($payload, $_SESSION['ingredientes'], $vegetariana);
 }
 ?>

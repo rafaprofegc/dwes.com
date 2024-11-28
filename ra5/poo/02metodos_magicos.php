@@ -117,6 +117,44 @@ echo $dir1;
 echo "<br>";
 var_dump($dir1);
 
+echo "<h3>Clonación de objetos</h3>";
+
+class Simple {
+    public string $cadena;
+    public int $numero;
+    public Direccion $dir;
+
+
+    public function __construct(string $c, int $n, Direccion $d) {
+        $this->cadena = $c;
+        $this->numero = $n;
+        $this->dir = $d;
+    }
+
+    public function __toString(): string {
+        return "{$this->cadena} {$this->numero} <br> " . $this->dir;
+    }
+
+    public function __clone() {
+        $this->dir = clone $this->dir;
+    }
+    
+}
+
+$d = new Direccion("C/", "Mayor", 3, 2, "A", 4, "B", 28000, "Madrid");
+
+$simple1 = new Simple("Simple1", 1, $d);
+$clone_simple1 = clone $simple1;
+
+$clone_simple1->cadena = "Clone del simple 1";
+
+// Modifico la calle de la dirección
+$clone_simple1->dir->nombre_via = "La menor";
+
+// Visualizo los dos
+echo $simple1 . "<br>";
+echo $clone_simple1 . "<br>";
+
 
 echo "<h3>Destrucción de los objetos</h3>";
 

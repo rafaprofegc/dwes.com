@@ -20,7 +20,7 @@
 */
 require_once($_SERVER['DOCUMENT_ROOT'] . "/includes/funciones.php");
 
-inicio_html("Consultas simples con MySQLi", ["/estilos/general.css", "/estilos/tablas.css"]);
+inicio_html("Consultas preparadas con MySQLi", ["/estilos/general.css", "/estilos/tablas.css"]);
 echo "<header>Consultas preparadas/parametrizadas a la BBDD</header>";
 
 // Parámetros para abrir conexión con la base de datos
@@ -30,55 +30,110 @@ $usuario_clase = "rlozano";
 $clave = "usuario";
 $esquema_clase = $esquema_casa = "rlozano";
 
+try {
+    // 1º Abrir la conexión con la BD
+    $cbd = new mysqli($servidor_clase, $usuario_clase, $clave, $esquema_clase);
+
+    $categorias = $cbd->query("SELECT id_categoria, descripcion FROM categoria");
+
+}
+catch(mysqli_sql_exception $mse) {
+    echo "<h3>Error de base de datos</h3>";
+    echo "<p>Código: " . $mse->getCode() . "<br>";
+    echo "<p>Mensaje: " . $mse->getMessage() . "<br>";
+}
+
+if( $_SERVER['REQUEST_METHOD'] == "POST" ) {
+    $filtros_saneamiento = ['referencia'        => FILTER_SANITIZE_SPECIAL_CHARS,
+                            'descripcion'       => FILTER_SANITIZE_SPECIAL_CHARS,
+                            'pvp'               => ['filter'  => FILTER_SANITIZE_NUMBER_FLOAT,
+                                                    'flags' => FILTER_FLAG_ALLOW_FRACTION ],
+                            'categoria'         => FILTER_SANITIZE_SPECIAL_CHARS
+    ];
+
+    $datos_saneados = filter_input_array(INPUT_POST, $filtros_saneamiento, false);
+
+    $filtros_validacion = ['referencia'        => FILTER_DEFAULT,
+                           'descripcion'       => FILTER_DEFAULT,
+                           'pvp'               => ['filter' => FILTER_VALIDATE_FLOAT,
+                                                   'options' => ['min_range' => 1]],
+                           'categoria'          => FILTER_DEFAULT
+    ];
+    $datos_validados = filter_var_array($datos_saneados, $filtros_validacion);
+
+    $datos_validados = array_filter($datos_validados);
+
+    foreach( $datos_validados as $campo => $valor ) {
+        if( ctype_digit($valor) ) $tipos[] = "i";
+        elseif ( is_float($valor) ) $tipos[] = "d";
+        else $tipos[] = "s";
+
+        if( end($tipos) == "s" ) {
+            $condiciones[] = "$campo LIKE ?";
+            $valores[] = "%" . strtoupper($valor) . "%";
+        } 
+        else {
+            $condiciones[] = "$campo = ?";
+            $valores[] = $valor;
+        }
+    }
+
+    if( isset($condiciones, $valores, $tipos) ) {
+        $clausula_where = "WHERE ";
+        $clausula_where.= implode(" AND ", $condiciones);
+
+        $tipos_datos = implode("", $tipos);
+    }
+}
+
 ?>
 <form method="POST" action="<?=$_SERVER['PHP_SELF']?>">
     <fieldset>
         <legend>Criterio de búsqueda</legend>
         <label for="referencia">Referencia</label>
-        <input type="text" name="referencia" id="referencia" size="10">
+        <input type="text" name="referencia" id="referencia" size="10"
+        <?=isset($datos_validados['referencia']) ? "value = '{$datos_validados['referencia']}'" : ""?>>
 
         <label for="descripcion">Descripción</label>
-        <input type="text" name="descripcion" id="descripcion" size="25">
+        <input type="text" name="descripcion" id="descripcion" size="25"
+        <?=isset($datos_validados['descripcion']) ? "value = '{$datos_validados['descripcion']}'" : ""?>>
 
         <label for="pvp">PVP</label>
-        <input type="text" name="pvp" id="pvp" size="5">
+        <input type="text" name="pvp" id="pvp" size="5"
+        <?=isset($datos_validados['pvp']) ? "value = '{$datos_validados['pvp']}'" : ""?>>
 
-        <label for="categoria">Referencia</label>
-        <input type="text" name="categoria" id="categoria" size="5">
+        <label for="categoria">Categoría</label>
+        <select name="categoria" id="categoria" size="1">
+            <option value="">Sin categoria</option>
+<?php
+        foreach($categorias as $categoria ) {
+            echo "<option value='{$categoria['id_categoria']}'";
+            echo isset($datos_validados['categoria']) && $datos_validados['categoria'] == $categoria['id_categoria'] ? "selected>" : ">";
+            echo "{$categoria['descripcion']}</option>";
+        }
+?>
+        </select>
+        <!--
+        <input type="text" name="categoria" id="categoria" size="5"
+        
+        -->
 
         <input type="submit" name="operacion" id="operacion" value="Filtrar">
     </fieldset>
 </form>
 
 <?php
-if( $_SERVER['REQUEST_METHOD'] == "POST" ) {
-    $referencia = filter_input(INPUT_POST, 'referencia', FILTER_SANITIZE_SPECIAL_CHARS);
-    $descripcion = filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_SPECIAL_CHARS);
-    $pvp = filter_input(INPUT_POST, 'pvp', FILTER_SANITIZE_NUMBER_FLOAT);
-    $pvp = filter_var($pvp, FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-    $categoria = filter_input(INPUT_POST, 'categoria', FILTER_SANITIZE_SPECIAL_CHARS);
-
-    if( empty($referencia) ) {
-        
-    }
-}
 
 try {
-    // 1º Abrir la conexión con la BD
-    $cbd = new mysqli($servidor_clase, $usuario_clase, $clave, $esquema_clase);
 
     // 2º Creo la sentencia preparada
     $sql = "SELECT referencia, descripcion, pvp, und_vendidas ";
     $sql.= "FROM articulo ";
-    $sql.= "WHERE pvp > ? AND categoria = ? AND und_vendidas > ?";
+    if( isset($clausula_where) ) {
+        $sql.= $clausula_where;
+    }
 
     $stmt = $cbd->prepare($sql);    // Objeto mysqli_stmt
-
-    $pvp_minimo = 4.75;
-    $categoria = "CARN";
-    $und_vendidas = 5;
-
-    $categoria = $cbd->escape_string($categoria);
 
     // 3º Vincular los valores a los parámetros
     // Tipos de datos: Una cadena de caracteres que indica el tipo de datos
@@ -86,8 +141,8 @@ try {
     // en la sentencia
     // Las letras son: s -> cadena, i->nº entero, d-> nº float o double, s->fecha
 
-    $tipos ="dsi";
-    $stmt->bind_param($tipos, $pvp_minimo, $categoria, $und_vendidas);
+    if( isset($clausula_where) )     
+        $stmt->bind_param($tipos_datos, ...$valores);
 
     // 4º Ejecutar la sentencia
     $stmt->execute();

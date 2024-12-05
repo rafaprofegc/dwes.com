@@ -59,4 +59,18 @@ function autocarga_clases(string $clase): void {
         throw new Exception("El archivo de la clase $clase NO existe");
     }   
 }
+
+function mostrar_error(Exception $e) {
+    echo "<h3>Error de la aplicación</h3>";
+    echo "<p>Código de error: " . $e->getCode() . "<br>";
+    echo "Mensaje de error: " . $e->getMessage() . "<br>";
+    echo "Archivo: " . $e->getFile() . "<br>";
+    echo "Línea: " . $e->getLine() . "</p>";
+
+    if( property_exists($e, "punto_recuperacion") ) {
+        echo "<p>Puede ir a <a href='{$e->punto_recuperacion['url']}'>{$e->punto_recuperacion['enlace']}</a</p>";
+    }
+    fin_html();
+    exit($e->getCode());
+}
 ?>

@@ -73,4 +73,17 @@ function mostrar_error(Exception $e) {
     fin_html();
     exit($e->getCode());
 }
+
+function cerrar_sesion() {
+    $parametros = session_get_cookie_params();
+    $nombre_sesion = session_name();
+    setcookie($nombre_sesion, "", time() - 1000, $parametros['path'], $parametros['domain'],
+                                                 $parametros['secure'], $parametros['httponly']);
+    
+    setcookie("jwt", "", time() - 1000);
+    
+    session_unset();
+
+    session_destroy();
+}
 ?>

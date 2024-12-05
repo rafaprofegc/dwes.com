@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once($_SERVER['DOCUMENT_ROOT'] . "/includes/funciones.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/ra4/autenticacion/03jwt_include.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/ra5/bbdd/datos_conexion.php");
@@ -97,7 +99,7 @@ elseif( $_SERVER['REQUEST_METHOD'] == "POST") {
                                'email'     => FILTER_VALIDATE_EMAIL,
                                'iban'      => FILTER_DEFAULT,
                                'telefono'  => ['filter' => FILTER_VALIDATE_INT,
-                                               'options' => FILTER_NULL_ON_FAILURE] ];
+                                               'flags' => FILTER_NULL_ON_FAILURE] ];
 
         $datos_validados = filter_var_array($datos_saneados, $filtros_validacion);
 
@@ -115,21 +117,48 @@ elseif( $_SERVER['REQUEST_METHOD'] == "POST") {
             $cbd = new mysqli($servidor_bd, $usuario, $clave, $esquema, $puerto);
 
             $sql = "UPDATE cliente SET ";
+            $tipos_datos = "";
             foreach($datos_validados as $campo => $dato) {
                 if( $dato === Null ) {
                     $sql.= "$campo = ?, ";
                     $valores[] = Null;
+                    $tipos_datos.= "s";
 
                 }
                 if( $dato ) {
                     $sql.= "$campo = ?, ";
                     $valores[] = $dato;
+
+                    // Averiguamos los tipos de datos
+                    if( ctype_digit($dato) ) $tipos_datos.= "i";
+                    elseif( is_numeric($dato) ) $tipos_datos.= "d";
+                    else $tipos_datos.= "s";
                 }
             }
             $sql = rtrim($sql, ", ");
 
             $sql.= " WHERE nif = ?";
             $valores[] = $payload['nif'];
+            $tipos_datos.= "s";
+
+            $stmt = $cbd->prepare($sql);
+            $stmt->bind_param($tipos_datos, ...$valores);
+            if( $stmt->execute() && $stmt->affected_rows == 1 ) {
+                echo "<h3>El usuario ha actualizado sus datos</h3>";
+                if( $datos_validados['nif'] != "" && $payload['nif'] != $datos_validados['nif'] ||
+                    $datos_validados['email'] != "" && $payload['email'] != $datos_validados['email']) {
+                    cerrar_sesion();
+                    echo "<p>Tiene que <a href='04autenticacion.php'>autenticarse de nuevo</a></p>";
+                }
+                else {
+                    echo "<p><a href='05pagina_inicio.php'>Volver a la página de inicio</a></p>";
+                }
+                fin_html();
+                exit(0);
+            }
+            else {
+                throw new mysqli_sql_exception("Ha habido un problema en la actualización", 9001);
+            }
         }
         catch(mysqli_sql_exception $mse) {
             mostrar_error($mse);
@@ -137,12 +166,8 @@ elseif( $_SERVER['REQUEST_METHOD'] == "POST") {
         finally {
             $cbd->close();
         }
-
-
-
     }
 }
-
 /*
     
 

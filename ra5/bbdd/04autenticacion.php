@@ -1,5 +1,8 @@
 <?php
+session_start();
+
 require_once($_SERVER['DOCUMENT_ROOT'] . "/includes/funciones.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/ra4/autenticacion/03jwt_include.php");
 
 inicio_html("BBDD - Autenticación de usuario", ["/estilos/general.css", "/estilos/formulario.css"]);
 echo "<header>Autenticación de usuario</header>";
@@ -46,18 +49,57 @@ elseif( $_SERVER['REQUEST_METHOD'] == "POST" && htmlspecialchars($_POST['operaci
 
         $cbd = new mysqli($servidor, $usuario, $clave_bd, $esquema, $puerto);
 
-        $email = cbd->escape_string($email);
+        $sql = "SELECT nif, nombre, apellidos, email, clave ";
+        $sql.= "FROM cliente ";
+        $sql.= "WHERE email = ?";
 
-        $sql = "SELECT nombre, apellidos, email, clave ";
-        $sql.= "WHERE email = '$email' AND clave='$clave'";
+        $stmt = $cbd->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
 
-        $sql.= "WHERE email = '$email' AND clave='' OR 'True'";
-        
-        
-        $resultado = $cbd->query($sql);
+        if( $resultado->num_rows == 1 ) {
+            // El usuario existe
+            // Compruebo la clave
+            $cliente = $resultado->fetch_assoc();
+
+            if( password_verify($clave, $cliente['clave']) ) {
+                // Usuario autenticado
+                
+                $payload = ['nif'       => $cliente['nif'],
+                            'nombre'    => "{$cliente['nombre']} {$cliente['apellidos']}" ,
+                            'email'     => $cliente['email'] ];
+                $jwt = generar_token($payload);
+                setcookie("jwt", $jwt, time() + 30 * 60);
+
+                echo "<h3>Cliente autenticado con éxito</h3>";
+                echo "<p>¡Bienvenido, {$payload['nombre']}! Desde aquí puede acceder a ";
+                echo "<a href='05pagina_inicio.php'>nuestro catálogo</a></p>";
+                fin_html();
+                exit(0);
+            }
+            else {
+                // Clave no válida
+                echo "<h3>Error en la aplicación</h3>";
+                echo "<p>La clave no es válida.<br>";
+                echo "<a href='{$_SERVER['PHP_SELF']}'>Inténtelo de nuevo</a></p>";
+                fin_html();
+                exit(2);    
+            }
+
+        }
+        else {
+            echo "<h3>Error en la aplicación</h3>";
+            echo "<p>El usuario $email no existe.<br>";
+            echo "<a href='{$_SERVER['PHP_SELF']}'>Inténtelo de nuevo</a></p>";
+            fin_html();
+            exit(1);
+        }
 
     }
     catch(mysqli_sql_exception $mse) {
-
+        echo "<h3>Error en la aplicación</h3>";
+        echo "<p>Código de error: " . $mse->getCode() . "<br>";
+        echo "<p>Mensaje de error: " . $mse->getMessage() . "<br>";
     }
-
+}

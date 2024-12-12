@@ -25,6 +25,7 @@ echo "<header>Consultas preparadas/parametrizadas a la BBDD</header>";
 
 // Parámetros para abrir conexión con la base de datos
 $dsn = "mysql:host=192.168.12.71;dbname=rlozano;charset=utf8mb4";
+//$dsn = "mysql:host=cpd.iesgrancapitan.org;port=9992;dbname=rlozano;charset=utf8mb4";
 $usuario = "rlozano";
 $clave = "usuario";
 $opciones = [
@@ -70,11 +71,13 @@ if( $_SERVER['REQUEST_METHOD'] == "POST" ) {
     $datos_validados = array_filter($datos_validados);
 
     foreach( $datos_validados as $campo => $valor ) {
-        if( !ctype_digit($valor) && !is_float($valor) ) $tipo = "s";
+        if( is_float($valor) ) $tipo = "d";
+        else $tipo = "s";
+
 
         if( $tipo == "s" ) {
-            $condiciones[] = "upper($campo) LIKE :$campo";
-            $valores[":$campo"] = "%" . strtoupper($valor) . "%";
+            $condiciones[] = "$campo LIKE :$campo";
+            $valores[":$campo"] = "%" . $valor . "%";
         } 
         else {
             $condiciones[] = "$campo = :$campo";
@@ -137,16 +140,20 @@ try {
     $stmt = $pdo->prepare($sql);
 
     // 3º Vincular los valores a los parámetros
-    // $valores[':referencia'] = "%CONF%";
-    // $valores[':descripcion'] = "%magdalena%";
+    // $valores[':referencia'] = "%CARN%";
+    // $valores[':descripcion'] = "%kg%";
     // $valores[':pvp'] = 2.25;
     // ...
+    
     if( isset($valores) ) {
         foreach($valores as $nombre_parametro => $valor) {
-            $stmt->bindParam($nombre_parametro, $valor);
+            $stmt->bindValue($nombre_parametro, $valor);
         }
     }
-
+    
+    //$stmt->bindParam(':referencia', $valores[':referencia']);
+    //$stmt->bindParam(':descripcion', $valores[':descripcion']);
+    
     // 4º Ejecutar la sentencia
     if( $stmt->execute() ) {
         // 5º Procesar los resultados

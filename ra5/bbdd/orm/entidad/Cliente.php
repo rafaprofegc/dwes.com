@@ -9,6 +9,6 @@ class Cliente extends Entidad {
     protected string $iban;
     protected ?string $telefono;
     protected string $email;
-    protected float $ventas;
+    protected ?float $ventas;
 }
 ?>

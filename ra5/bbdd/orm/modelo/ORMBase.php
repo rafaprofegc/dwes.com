@@ -6,6 +6,7 @@ use orm\bd\Database;
 use orm\entidad\Entidad;
 use orm\error\ORMExcepcion;
 use PDOException;
+use DateTime;
 
 abstract class ORMBase {
     protected string $tabla;
@@ -36,7 +37,7 @@ abstract class ORMBase {
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(':id', $id );
-            if( $stmt->execute() && $stmt->rowCount() == 1 ) {
+            if( $stmt->execute() ) {
                 $fila = $stmt->fetch();
                 $clase = $this->getClaseEntidad();
                 $objeto = new $clase($fila);
@@ -56,7 +57,7 @@ abstract class ORMBase {
             $stmt = $this->pdo->query($sql);
             $filas = [];
             if( $stmt->execute() ) {
-                while( $fila = $stmt->fetch() ) {
+                while( $fila = $stmt->fetch()) {
                     $clase = $this->getClaseEntidad();
                     $objeto = new $clase($fila);
                     $filas[] = $objeto;
@@ -82,7 +83,15 @@ abstract class ORMBase {
         try {
             $stmt = $this->pdo->prepare($sql);
             foreach($array_objeto as $columna => $valor) {
-                $stmt->bindValue(":$columna", $valor);
+                $nombre_tipo = Entidad::tipoPropiedad($nueva_fila, $columna);
+                if( $nombre_tipo == \DateTime::class ) {
+                    $stmt->bindValue(":$columna", $valor->format(Entidad::FECHA_HORA_MYSQL));
+                }
+                else {
+                    $stmt->bindValue(":$columna", $valor);
+                }
+
+                
             }
 
             return $stmt->execute() && $stmt->rowCount() == 1;
@@ -108,7 +117,14 @@ abstract class ORMBase {
             $stmt = $this->pdo->prepare($sql);
             
             foreach( $array_objeto as $columna => $valor) {
-                $stmt->bindValue(":$columna", $valor);
+                $nombre_tipo = Entidad::tipoPropiedad($fila, $columna);
+                if( $nombre_tipo == DateTime::class ) {
+                    $stmt->bindValue(":$columna", $valor->format(Entidad::FECHA_HORA_MYSQL));    
+                }
+                else {
+                    $stmt->bindValue(":$columna", $valor);
+                }
+                
             }
             $stmt->bindValue(":id", $id);
 

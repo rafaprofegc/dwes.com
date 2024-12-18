@@ -8,6 +8,8 @@ class Articulo extends Entidad {
     public const IVA_REDUCIDO = 'R';
     public const IVA_NORMAL = 'N';
     public const IVA_SUPERREDUCIDO = 'SR';
+
+    public static array $TIPOS_IVA = ['R' => "Reducido", "N" => "Normal", "SR" => "Superreducido"];
     
     protected string $referencia;
     protected string $descripcion;

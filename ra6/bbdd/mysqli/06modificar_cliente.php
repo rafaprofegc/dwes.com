@@ -3,7 +3,7 @@ session_start();
 
 require_once($_SERVER['DOCUMENT_ROOT'] . "/includes/funciones.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/ra4/autenticacion/03jwt_include.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/ra5/bbdd/datos_conexion.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/ra6/bbdd/datos_conexion.php");
 
 // Verificar el token
 if( isset($_COOKIE['jwt'])) {

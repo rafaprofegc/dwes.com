@@ -111,7 +111,7 @@ if( $_SERVER['REQUEST_METHOD'] == "POST") {
     echo "<header>Serialización de objetos en PHP</header>";
     echo "<h3>Zona de usuarios autenticados</h3>";
     echo "<p>Bienvenido, {$objeto_usuario->nombre}. Se autenticado con éxito y puede ir a su zona</p>";
-    echo "<p><a href='/ra5/poo/03serializacion_zona.php'>Puede ir a la zona del perfil {$objeto_usuario->perfil}</p>";
+    echo "<p><a href='/ra6/poo/03serializacion_zona.php'>Puede ir a la zona del perfil {$objeto_usuario->perfil}</p>";
     fin_html();
   }
   else {

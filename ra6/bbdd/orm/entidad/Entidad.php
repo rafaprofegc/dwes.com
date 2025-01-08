@@ -3,6 +3,7 @@ namespace orm\entidad;
 
 use DateTime;
 use DateTimeZone;
+use Exception;
 use ReflectionProperty;
 
 abstract class Entidad {
@@ -48,6 +49,10 @@ abstract class Entidad {
             }
             
         }
+        else {
+            throw new Exception("La propiedad no existe", 1);
+        }
+    
     }
 
     public function toArray(): array {

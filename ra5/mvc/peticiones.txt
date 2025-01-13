@@ -1,0 +1,16 @@
+Peticion: articulos
+
+Modelo                                      Vista
+----------------------------------------------------------------------------
+Se obtiene de la BD todos los artículos     Se presentan los artículos en formato tabla
+
+
+Petición: Main
+Modelo                                       Vista
+-------------------------------------------- --------------------------------
+                                              Formulario autenticación -> AUTENTICAR
+Obtener los artículos en oferta               Formulario búsqueda por descripción -> BUSCAR
+Iniciar el carrito                            Listado de artículos en oferta -> AÑADIR CARRITO
+                                              Cuantos artículos hay en el carrito
+
+Petición: Autenticar

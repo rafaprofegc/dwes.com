@@ -22,7 +22,7 @@ inicio_html("PDO con MySQL", ["/estilos/general.css", "/estilos/tablas.css"]);
     Opcionalmente un conjunto de opciones. 
 */
 
-$dsn = "mysql:host=192.168.12.71;dbname=rlozano;charset=utf8mb4";
+$dsn = "mysql:host=cpd.iesgrancapitan.org;port=9992;dbname=rlozano;charset=utf8mb4";
 $usuario = "rlozano";
 $clave = "usuario";
 $opciones = [

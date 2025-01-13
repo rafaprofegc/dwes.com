@@ -4,7 +4,7 @@ namespace orm\util;
 use Exception;
 
 class Autocarga {
-    private const string DIRECTORIO_BASE = "/ra5/bbdd";
+    private const string DIRECTORIO_BASE = "/ra6/bbdd";
 
     public static function registro_autocarga(): void {
         try {

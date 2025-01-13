@@ -20,9 +20,9 @@ class Database {
     private PDO $pdo;
 
     private function __construct() {
-        //$dsn = "mysql:host=192.168.12.71;dbname=rlozano;charset=utf8mb4";
+        $dsn = "mysql:host=192.168.12.71;dbname=rlozano;charset=utf8mb4";
         //$dsn = "mysql:host=cpd.iesgrancapitan.org;port=9992;dbname=rlozano;charset=utf8mb4";
-        $dsn = "oci:dbname=192.168.12.70:1521/XEPDB1;charset=utf8";
+        //$dsn = "oci:dbname=192.168.12.70:1521/XEPDB1;charset=utf8";
         
         //$dsn = "oci:dbname=//cpd.iesgrancapitan.org:9990/XEPDB1;charset=utf8";
         $usuario = "rlozano";

@@ -4,13 +4,13 @@ namespace mvc\vista;
 
 class V_Main extends Vista {
     public function genera_salida(mixed $datos): void {
-        $this->inicio_html("Página de inicio", ["/estilos/general.css", ["/estilos/tabla.css"]]);
+        $this->inicio_html("Página de inicio", ["/estilos/general.css", "/estilos/tablas.css"]);
+        if( !isset($_COOKIE['jwt'])) {
 ?>
-        <h2>Tienda Online</h2>
         <form method="POST" action="<?=$_SERVER['PHP_SELF']?>">
             <!-- <input type="hidden" name="idp" id="idp" value="autenticar"> -->
-            <label for="login">Login</label>
-            <input type="text" name="login" id="login" size="10">
+            <label for="email">Email</label>
+            <input type="text" name="email" id="email" size="30">
 
             <label for="clave">Clave</label>
             <input type="password" name="clave" id="clave" size="10">
@@ -18,7 +18,9 @@ class V_Main extends Vista {
             <button type="submit" name="idp" id="idp1" value="autenticar">Inicia sesión</button>
             <button type="submit" name="idp" id="idp2" value="registrar">Regístrese</button>
         </form>
-
+<?php
+        }
+?>
         <h3>Comience su compra buscando lo que quiera</h3>
         <form method="POST" action="<?=$_SERVER['PHP_SELF']?>">
             <input type="text" name="descripcion" id="descripcion" size="40">
@@ -36,6 +38,7 @@ class V_Main extends Vista {
                     <th>Descripción</th>
                     <th>PVP</th>
                     <th>Dto</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -45,7 +48,7 @@ class V_Main extends Vista {
             echo "<td>{$articulo_oferta['referencia']}</td>" . PHP_EOL;
             echo "<td>{$articulo_oferta['descripcion']}</td>" . PHP_EOL;
             echo "<td>{$articulo_oferta['pvp']}</td>" . PHP_EOL;
-            echo "<td>" . (floatval($articulo_oferta['dto']) * 100) ."%</td>" . PHP_EOL;
+            echo "<td>" . (floatval($articulo_oferta['dto_venta']) * 100) ."%</td>" . PHP_EOL;
             echo "<td>";
             echo "<form method='POST' action='{$_SERVER['PHP_SELF']}'>";
             echo "<input type='hidden' name='referencia' id='referencia' value='{$articulo_oferta['referencia']}'>";

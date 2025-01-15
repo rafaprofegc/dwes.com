@@ -82,6 +82,10 @@ abstract class Entidad {
         $nombre_tipo = $tipo_propiedad->getName();
         return $nombre_tipo;
     }
+
+    public function __serialize(): array {
+        return $this->toArray();
+    }
 }
 
 ?>

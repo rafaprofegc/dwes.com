@@ -19,6 +19,7 @@ abstract class Vista {
 ?>
     </head>
     <body>
+        <h2>Tienda Online</h2>
 <?php
     }
 

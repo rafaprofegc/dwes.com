@@ -13,10 +13,10 @@ class M_Main implements Modelo {
 
         // Si el usuario se ha autenticado
         if( isset($_COOKIE['jwt'])) {
-            $this->sin_usuario_autenticado();
+            $this->con_usuario_autenticado();
         }
         else {
-            $this->con_usuario_autenticado();
+            $this->sin_usuario_autenticado();
         }
 
         $orm_articulos = new Mvc_Orm_Articulos();

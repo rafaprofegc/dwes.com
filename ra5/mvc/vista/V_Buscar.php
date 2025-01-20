@@ -11,7 +11,12 @@ class V_Buscar extends Vista {
         //Datos del usuario
         if( isset($_SESSION['cliente'])) {
             $cliente = $_SESSION['cliente'];
-            echo "<h2>{$cliente->nombre} {$cliente->apellidos}</h2>";
+            echo "<h3>{$cliente->nombre} {$cliente->apellidos}</h3>";
+            echo <<<CIERRA_SESION
+                <form method="POST" action="/ra5/index.php">
+                    <button type="submit" name="idp" id="idp" value="cerrar_sesion">Cerrar sesión</button>
+                </form>
+            CIERRA_SESION;
         }
         else {
             echo <<<FORM

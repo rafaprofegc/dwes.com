@@ -21,7 +21,11 @@ class Controlador {
                                               'vista' => "mvc\\vista\\V_Autenticar"],
                              'buscar' => ['modelo' => "mvc\\modelo\\M_Buscar",
                                           'vista'=> "mvc\\vista\\V_Buscar",
-                                          'metodo' => 'POST']          
+                                          'metodo' => 'POST'],
+                             'añadir' => ['modelo' => "mvc\\modelo\M_Añadir",
+                                          'vista'  => "mvc\\vista\\V_Añadir"],
+                             'finalizar_compra' => ['modelo' => "mvc\\modelo\\M_Finalizar_compra",
+                                                    'vista'  => "mvc\\vista\\V_Finalizar_compra"]          
     ];
     }
 

@@ -2,6 +2,7 @@
 namespace mvc\modelo\orm;
 
 use orm\modelo\ORMArticulo;
+use orm\entidad\Articulo;
 
 class Mvc_Orm_Articulos extends ORMArticulo {
     
@@ -18,6 +19,27 @@ class Mvc_Orm_Articulos extends ORMArticulo {
         else {
             return [];
         }
+    }
+
+    public function get_articulos_descripcion(string $descripcion ): array {
+        $sql = "SELECT referencia, descripcion, pvp, dto_venta, categoria, ";
+        $sql.= "und_disponibles, und_vendidas, fecha_disponible, tipo_iva ";
+        $sql.= "FROM {$this->tabla} ";
+        $sql.= "WHERE lower(descripcion) LIKE lower(:descripcion)";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':descripcion', strtolower('%' . $descripcion . '%'));
+        if( $stmt->execute() ) {
+            while( $articulo = $stmt->fetch() ) {
+                $articulo = new Articulo($articulo);
+                $articulos[] = $articulo;
+            }
+            return $articulos;
+        }
+
+        return [];
+
+
     }
 }
 ?>

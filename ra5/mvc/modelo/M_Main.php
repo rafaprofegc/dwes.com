@@ -8,9 +8,6 @@ class M_Main implements Modelo {
 
     public function despacha(): mixed {
 
-        // Iniciar sesión o recuperar la que ya estuviera
-        session_start();
-
         // Si el usuario se ha autenticado
         if( isset($_COOKIE['jwt'])) {
             $this->con_usuario_autenticado();

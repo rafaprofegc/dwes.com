@@ -55,7 +55,7 @@ class M_Autenticar implements Modelo {
             $jwt = JWT::generar_token($payload);
             $duracion_sesion = ini_get("session.gc_maxlifetime");
 
-            setcookie("jwt", $jwt, $duracion_sesion,"/", "dwes.com", false, true );
+            setcookie("jwt", $jwt, time() + $duracion_sesion,"/", "dwes.com", false, true );
 
             $_SESSION['cliente'] = $cliente;
 

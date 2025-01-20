@@ -29,7 +29,7 @@ abstract class Entidad {
         if( property_exists($this, $propiedad) ) {
             // Compruebo si la propiedad es de tipo DateTime
             $nombre_tipo = $this->tipoPropiedad($this, $propiedad);
-            if( $nombre_tipo == DateTime::class ) {
+            if( $nombre_tipo == DateTime::class && $valor ) {
                 /* Creo un objeto DateTime con $valor
                 Formato de fecha en MySQL: yyyy-mm-dd
                 Formato de fecha y hora en MySQL: yyyy-mm-dd HH:MM:SS
@@ -86,6 +86,16 @@ abstract class Entidad {
     public function __serialize(): array {
         return $this->toArray();
     }
+
+    public function __sleep(): array {
+        // Accedemos a las propiedades
+        foreach( $this as $propiedad => $valor ) {
+            $propiedades[] = $propiedad;
+        }
+
+        return $propiedades;
+    }
+           
 }
 
 ?>

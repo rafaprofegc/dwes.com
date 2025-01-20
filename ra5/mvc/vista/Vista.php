@@ -2,9 +2,12 @@
 namespace mvc\vista;
 
 abstract class Vista {
+    public const FORMATO_FECHA = "d/m/Y";
+
     abstract public function genera_salida(mixed $datos): void;
 
     protected function inicio_html(string $titulo, array $estilos ) {
+        ob_start();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,6 +29,7 @@ abstract class Vista {
     protected function fin_html() {
         echo "</body>";
         echo "</html>";
+        ob_end_flush();
     }
 }
 ?>

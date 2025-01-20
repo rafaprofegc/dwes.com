@@ -22,7 +22,7 @@
     * Método mágico __sleep()
         - Se invoca por serialize() justo antes de la serialización para preservar
           el estado del objeto, es decir, las propiedades del objeto.
-        - El método mágico __serializa() se invoca también por serialize(), y tiene
+        - El método mágico __serialize() se invoca también por serialize(), y tiene
           precedencia sobre __sleep(). Si existe __serialize() no se invoca __sleep().
         - Este método obligatoriamente devuelve un array con las propiedades PÚBLICAS,
           ya que serialize() no tiene acceso a propiedades protegidas o privadas.

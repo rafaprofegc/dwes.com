@@ -14,7 +14,7 @@ class V_Autenticar extends Vista {
 
         // Botón de cierre de sesión
 ?>
-        <form method="POST" action="/index.php">
+        <form method="POST" action="/ra5/index.php">
             <button type="submit" name="idp" id="idp" value="cerrar_sesion">Cerrar sesión</button>
         </form>
 <?php
@@ -52,7 +52,7 @@ class V_Autenticar extends Vista {
 
         // Formulario de búsqueda de artículos
 ?>
-        <form method="POST" action="/index.php">
+        <form method="POST" action="/ra5/index.php">
             <label for="descripcion">Descripción Artículo</label>
             <input type="text" name="descripcion" id="descripcion" size="40">
 

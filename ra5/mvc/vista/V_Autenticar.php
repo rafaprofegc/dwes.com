@@ -18,7 +18,42 @@ class V_Autenticar extends Vista {
             <button type="submit" name="idp" id="idp" value="cerrar_sesion">Cerrar sesión</button>
         </form>
 <?php
-
+        if( isset($_SESSION['carrito'])) {
+            if( count($_SESSION['carrito']) == 0 ) {
+                echo "<p>No tiene artículos en el carrito. Haga una búsqueda y empiece a comprar</p>";
+            }
+            else {
+                echo <<<TABLA
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Referencia</th>
+                                <th>Descripción</th>
+                                <th>PVP</th>
+                                <th>Dto</th>
+                                <th>Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                TABLA;
+                $importe = 0;
+                foreach($_SESSION['carrito'] as $articulo ) {
+                    echo "<tr>" . PHP_EOL;
+                    echo "<td>{$articulo->referencia}</td>" . PHP_EOL;
+                    echo "<td>{$articulo->descripcion}</td>" . PHP_EOL;
+                    echo "<td>{$articulo->pvp} €</td>" . PHP_EOL;
+                    $dto = $articulo->dto_venta * 100;
+                    echo "<td>{$dto} %</td>" . PHP_EOL;
+                    $neto = $articulo->pvp - $articulo->pvp * $articulo->dto_venta;
+                    $importe += $neto;
+                    echo "<td>{$neto} €</td>" . PHP_EOL;
+                    echo "</tr>" . PHP_EOL;
+                }
+                echo "</tbody>";
+                echo "</table>";
+                echo "<h4>Importe del carrito: $importe €</h4>";
+            }
+        }
         // Los últimos envíos
         echo <<<TABLA
             <h3>Últimos envíos</h3>

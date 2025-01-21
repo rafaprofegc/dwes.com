@@ -63,7 +63,7 @@ class M_Autenticar implements Modelo {
 
         }
         else {
-            return false;
+            throw new Exception("La autenticación no ha tenido éxito", 4007);
         }
 
     }

@@ -5,7 +5,7 @@ use mvc\modelo\Modelo;
 use util\seguridad\JWT;
 use Exception;
 use mvc\modelo\orm\Mvc_Orm_Direccion_Envio;
-use orm\modelo\ORMDireccion_Envio;
+use orm\modelo\ORMForma_Envio;
 
 class M_Finalizar_compra implements Modelo {
 
@@ -27,10 +27,12 @@ class M_Finalizar_compra implements Modelo {
             $direcciones_envio = $this->obtener_direcciones_envio();
             $formas_envio = $this->obtener_formas_envio();
 
+            return ['direcciones_envio' => $direcciones_envio, 
+                    'formas_envio'      => $formas_envio];
         }
-
-
-
+        else {
+            return null;
+        }
     }
 
     private function obtener_direcciones_envio(): array {
@@ -39,7 +41,12 @@ class M_Finalizar_compra implements Modelo {
         $direcciones_envio = $orm_dir_env->getDireccionesCliente($cliente->nif);
 
         return $direcciones_envio;
+    }
 
+    private function obtener_formas_envio(): array {
+        $orm_formas_envio = new ORMForma_Envio();
+        $formas_envio = $orm_formas_envio->getAll();
+        return $formas_envio;
     }
 }
 

@@ -22,11 +22,7 @@ class V_Añadir extends Vista {
         // Botón seguir comprando
         $this->inicio_html("Añadir al carrito", ["/estilos/general.css", "/estilos/tablas.css"]);
 
-        if( isset($_COOKIE['jwt']) ) {
-            $payload = JWT::verificar_token($_COOKIE['jwt']);
-            if( !$payload ) {
-                throw new Exception("La identidad del usuario no ha sido confirmada", 4006);
-            }
+        if( isset($_SESSION['cliente']) ) {
             $cliente = $_SESSION['cliente'];
             echo "<h3>{$cliente->nombre} {$cliente->apellidos}</h3>";
             echo <<<CIERRA_SESION
@@ -72,11 +68,12 @@ class V_Añadir extends Vista {
             echo "<tr>" . PHP_EOL;
             echo "<td>{$articulo->referencia}</td>" . PHP_EOL;
             echo "<td>{$articulo->descripcion}</td>" . PHP_EOL;
-            echo "<td>{$articulo->pvp}</td>" . PHP_EOL;
-            echo "<td>{$articulo->dto_venta}</td>" . PHP_EOL;
+            echo "<td>{$articulo->pvp} €</td>" . PHP_EOL;
+            $dto = $articulo->dto_venta * 100;
+            echo "<td>{$dto} %</td>" . PHP_EOL;
             $precio_neto = $articulo->pvp - $articulo->pvp * $articulo->dto_venta;
             $importe += $precio_neto;
-            echo "<td>$precio_neto</td>" . PHP_EOL;
+            echo "<td>$precio_neto €</td>" . PHP_EOL;
             echo "</tr>" . PHP_EOL;
         }
         echo <<<TABLA

@@ -25,7 +25,9 @@ class Controlador {
                              'añadir' => ['modelo' => "mvc\\modelo\M_Añadir",
                                           'vista'  => "mvc\\vista\\V_Añadir"],
                              'finalizar_compra' => ['modelo' => "mvc\\modelo\\M_Finalizar_compra",
-                                                    'vista'  => "mvc\\vista\\V_Finalizar_compra"]          
+                                                    'vista'  => "mvc\\vista\\V_Finalizar_compra"],
+                             'crear_pedido'     => ['modelo' => "mvc\\modelo\\M_Crear_pedido",
+                                                    'vista'  => "mvc\\vista\\V_Crear_pedido"]          
     ];
     }
 

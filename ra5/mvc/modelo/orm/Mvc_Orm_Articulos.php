@@ -29,6 +29,7 @@ class Mvc_Orm_Articulos extends ORMArticulo {
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':descripcion', strtolower('%' . $descripcion . '%'));
+        $articulos = [];
         if( $stmt->execute() ) {
             while( $articulo = $stmt->fetch() ) {
                 $articulo = new Articulo($articulo);

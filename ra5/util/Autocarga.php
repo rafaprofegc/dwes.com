@@ -16,7 +16,7 @@ class Autocarga {
     }
 
     public static function autocarga($clase): void {
-        $directorios = ['/ra5', '/ra6/bbdd'];
+        $directorios = ['/ra5', '/ra6/bbdd', '/ra7'];
 
         $clase = str_replace("\\", "/", $clase);
         $encontrado = False;

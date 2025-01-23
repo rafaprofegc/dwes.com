@@ -4,9 +4,10 @@ namespace orm\entidad;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use JsonSerializable;
 use ReflectionProperty;
 
-abstract class Entidad {
+abstract class Entidad implements JsonSerializable {
 
     public const FECHA_HORA_MYSQL = "Y-m-d H:i:s";
     public const FECHA_HORA_USUARIO = "d/m/Y H:i:s";
@@ -94,6 +95,22 @@ abstract class Entidad {
         }
 
         return $propiedades;
+    }
+
+    public function jsonSerialize(): mixed {
+        $objeto_json = [];
+        
+        foreach($this as $propiedad => $valor ) {
+            $reflexion_propiedad = new ReflectionProperty($this, $propiedad);
+            $tipo_datos = $reflexion_propiedad->getType()->getName();
+            if ( $tipo_datos === DateTime::class && $valor ) {
+                $objeto_json[$propiedad] = $valor->format(self::FECHA_HORA_USUARIO);
+            }
+            else {
+                $objeto_json[$propiedad] = $valor;
+            }          
+        }
+        return  $objeto_json;
     }
            
 }

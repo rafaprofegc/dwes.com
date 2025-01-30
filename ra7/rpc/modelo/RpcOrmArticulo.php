@@ -1,6 +1,7 @@
 <?php
 namespace rpc\modelo;
 
+use Exception;
 use orm\modelo\ORMArticulo;
 use orm\entidad\Articulo;
 
@@ -71,8 +72,19 @@ class RpcOrmArticulo extends ORMArticulo {
         return $articulos;
     }
     
-    public function getClasificacion($articulo): float {
-        
+    public function getClasificacion($referencia): float {
+        $sql = "SELECT AVG(clasificacion) as media FROM reseña WHERE referencia = :ref";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(":ref", $referencia);
+        if( $stmt->execute() ) {
+            $resultado = $stmt->fetch();
+            if( $resultado['media'] ) {
+                return $resultado['media'];
+            }
+        }
+    
+        throw new Exception("El artículo {$referencia} no tiene reseñas");        
     }
 }
 ?>

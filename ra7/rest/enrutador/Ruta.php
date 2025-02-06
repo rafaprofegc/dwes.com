@@ -15,19 +15,19 @@ class Ruta {
     }
 
     public function getClase(): string {
-
+        return $this->clase;
     }
 
     public function getFuncion(): string {
-
+        return $this->funcion;
     }
 
     public function getPath(): string {
-
+        return $this->path;
     }
 
     public function esIgual(string $verbo, string $path): bool {
-        
+        return $this->verbo === $verbo && preg_match($this->path, $path); 
     }
 }
 ?>

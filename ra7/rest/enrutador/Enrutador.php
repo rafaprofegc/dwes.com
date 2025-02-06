@@ -24,10 +24,10 @@ class Enrutador {
         DELETE /articulos/{ref} -> Elimina un artículo
         */
         $this->rutas[] = new Ruta("GET", "#^/articulos$#", RestORMArticulo::class, "getAll");
-        $this->rutas[] = new Ruta("GET", "#^/articulos/\w+$#", RestORMArticulo::class, "get");
+        $this->rutas[] = new Ruta("GET", "#^/articulos/(\w+)$#", RestORMArticulo::class, "get");
         $this->rutas[] = new Ruta("POST", "#^/articulos$#", RestORMArticulo::class, "insert");
-        $this->rutas[] = new Ruta("PUT", "#^/articulos/\w+$#", RestORMArticulo::class, "update");
-        $this->rutas[] = new Ruta("DELETE", "#^/articulos/\w+$#", RestORMArticulo::class, "delete");
+        $this->rutas[] = new Ruta("PUT", "#^/articulos/(\w+)$#", RestORMArticulo::class, "update");
+        $this->rutas[] = new Ruta("DELETE", "#^/articulos/(\w+)$#", RestORMArticulo::class, "delete");
     }
 
     public function despacha(): void {
@@ -101,7 +101,8 @@ class Enrutador {
         $clase_modelo = $ruta->getClase();
         $metodo = $ruta->getFuncion();
 
-        $parametros = $this->obtenerParametros($path_peticion, $ruta);
+        //$parametros = $this->obtenerParametros($path_peticion);
+        $parametros = $this->obtenerParametros($ruta->getPath(), $path_peticion);
 
         $objeto_modelo = new $clase_modelo();
         $datos = call_user_func_array([$objeto_modelo, $metodo], $parametros);
@@ -118,6 +119,7 @@ class Enrutador {
 
     }
 
+    /*
     private function obtenerParametros(string $path_peticion): array {
         // Supongamos /articulos/acin0001/reseñas/50
         
@@ -130,6 +132,27 @@ class Enrutador {
         }
         
         return $parametros;
+    }
+    */
+    private function obtenerParametros(string $path_exp_reg, string $path_peticion ): array {
+
+        // Suponer path_exp_reg: #^/articulos/(\w+)/reseñas/(\w+)$#
+        //                                      s1           s2
+        // Supongamos path_peticion: /articulos/acin0001/reseñas/50
+
+        if( preg_match($path_exp_reg, $path_peticion, $parametros) ) {
+            // Al ejecutar preg_match sobre la url anterior
+            // $parametros[0] = /articulos/acin0001/reseñas/50
+            // $parametros[1] = acin0001
+            // $parametros[2] = 50
+            // Hay que devolver el array $parametros menos el primer elemento
+            
+            array_shift($parametros);
+            return $parametros;
+        }
+        else {
+            return [];
+        }
     }
 
     private function gestionaError(mixed $error): void {

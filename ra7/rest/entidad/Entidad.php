@@ -44,7 +44,13 @@ abstract class Entidad implements JsonSerializable {
     }
 
     public function toArray(): array {
-        return get_object_vars($this);
+        $propiedades = get_object_vars($this);
+        foreach($propiedades as $propiedad => $valor ) {
+            if( $valor instanceof \DateTime ) {
+                $propiedades[$propiedad] = $valor->format(self::FORMATO_FECHA);
+            }
+        }
+        return $propiedades;
     }
 
     public function jsonSerialize(): array {

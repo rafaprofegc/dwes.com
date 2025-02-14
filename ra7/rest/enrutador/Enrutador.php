@@ -27,7 +27,9 @@ class Enrutador {
         $this->rutas[] = new Ruta("GET", "#^/articulos/(\w+)$#", RestORMArticulo::class, "get");
         $this->rutas[] = new Ruta("POST", "#^/articulos$#", RestORMArticulo::class, "insert");
         $this->rutas[] = new Ruta("PUT", "#^/articulos/(\w+)$#", RestORMArticulo::class, "update");
+        $this->rutas[] = new Ruta("PATCH", "#^/articulos/(\w+)$#", RestORMArticulo::class, "update");
         $this->rutas[] = new Ruta("DELETE", "#^/articulos/(\w+)$#", RestORMArticulo::class, "delete");
+
     }
 
     public function despacha(): void {
@@ -45,8 +47,9 @@ class Enrutador {
             $datos = $this->ejecutaRuta($ruta, $ruta_peticion);
 
             if( $datos['exito'] ) {
-                header( $_SERVER['SERVER_PROTOCOL']. $datos['codigo']);
-                header("Content: application/json");
+                header( $_SERVER['SERVER_PROTOCOL'] . " " . $datos['codigo']);
+                header("Content-Type: application/json");
+                //header("Location: {$datos['datos']}");
                 echo json_encode($datos, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                 exit(0);
             }
@@ -159,10 +162,13 @@ class Enrutador {
         if( $error instanceof Exception ) {
             header($_SERVER['SERVER_PROTOCOL'] . " " . $error->getCode() . " " . $error->getMessage() );
             header("Content-Type: application/json");
+            echo json_encode($error);
 
         }
         else {
             header($_SERVER['SERVER_PROTOCOL'] . " " . $error['codigo']);
+            header("Content-Type: application/json");
+            echo json_encode($error);
         }
     }
 }

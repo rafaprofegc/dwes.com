@@ -1,0 +1,11 @@
+{
+    "autoload": {
+        "psr-4": {
+            "util\\" : "ra8/util",
+            "mvc\\"  : "ra5/mvc"
+        }
+    },
+    "require": {
+        "monolog/monolog": "3.0.*"
+    }
+}

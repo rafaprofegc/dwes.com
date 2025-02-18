@@ -9,6 +9,15 @@ class JsonRpcControlador {
 
         //1º Obtener el cuerpo de la petición
         $cuerpo = file_get_contents("php://input");
+
+        // Formato de la petición
+        /*
+           { "jsonrpc": "2.0",
+             "method": "Clase.metodo",
+             "params": [par1, par2, ...],
+             "id": 1234
+           }
+        */
         $peticion = json_decode($cuerpo, true);
 
         // 2º Comprobar que la petición es válida

@@ -14,7 +14,7 @@ function sumarNumeros() {
 
     const num1 = parseFloat(n1.value);
     const num2 = parseFloat(n2.value);
-    if( num1 == NaN || num2 == NaN ) {
+    if( !num1 || !num2 ) {
         alert("Los valores tienen que ser numéricos");
         return;
     }
@@ -31,8 +31,29 @@ function sumarNumeros() {
     peticionHttp.setRequestHeader("Accept", "application/json");
 
     // 4º Procesamiento de la respuesta
+    peticionHttp.onreadystatechange = () => {
+        if( peticionHttp.readyState == XMLHttpRequest.DONE ) {
+            if( peticionHttp.status == 200 ) {
+                let respuesta = JSON.parse(peticionHttp.responseText);
+                if( respuesta.error ) {
+                    alert(respuesta.error.code + " " + respuesta.error.message);
+                    return;
+                }
+                else {
+                    let resultado = document.getElementById('resultado');
+                    resultado.value = respuesta.result;
+                }
 
+            }
+        }
+    }
     // 5º Enviar la petición
-    
+    const cuerpo = {
+        jsonrpc: "2.0",
+        method: "Matematicas.suma",
+        params: [num1, num2],
+        id: 1
+    }
+    peticionHttp.send(JSON.stringify(cuerpo));
 }
 

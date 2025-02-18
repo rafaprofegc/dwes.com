@@ -13,10 +13,10 @@ class HTML {
         <meta name="viewport" content="width=device-width, initial-scale=1">
 <?php
         foreach($estilos as $estilo) {
-            echo "\t\t\t<link href='$estilo' type='text/css' rel='stylesheet'>\n";
+            echo "\t\t<link href='$estilo' type='text/css' rel='stylesheet'>\n";
         }
         foreach($scripts as $script) {
-            echo "\t\t\t<script type='text/javascript' src='$script'></script>\n";
+            echo "\t\t<script type='text/javascript' src='$script'></script>\n";
         }
 ?>
         <script type="text/javascript">

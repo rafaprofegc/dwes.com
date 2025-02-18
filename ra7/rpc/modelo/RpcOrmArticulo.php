@@ -55,6 +55,18 @@ class RpcOrmArticulo {
 */
 
 class RpcOrmArticulo extends ORMArticulo { 
+    // La petición tendrá: method: RpcOrmArticulo.obtenerArticulo
+    public function obtenerArticulo(string $referencia): object {
+        $orm_articulo = new ORMArticulo();
+        $articulo = $orm_articulo->get($referencia);
+        return $articulo;
+    }
+
+    public function obtenerArticulos(): array {
+        $orm_articulo = new ORMArticulo();
+        return $orm_articulo->getAll();
+    }
+    
     public function getArticulosCategoria($categoria) {
         $sql = "SELECT referencia, descripcion, pvp, dto_venta, und_disponibles, und_vendidas, ";
         $sql.= "fecha_disponible, categoria, tipo_iva ";

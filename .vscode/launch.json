@@ -43,6 +43,12 @@
                 "uriFormat": "http://localhost:%s",
                 "action": "openExternally"
             }
+        },
+        {
+            "type": "chrome",
+            "name": "http://dwes.com/ra8/04sumar.php",
+            "request": "launch",
+            "url": "http://dwes.com/ra8/04sumar.php"
         }
     ]
 }

@@ -104,7 +104,7 @@ abstract class Entidad implements JsonSerializable {
             $reflexion_propiedad = new ReflectionProperty($this, $propiedad);
             $tipo_datos = $reflexion_propiedad->getType()->getName();
             if ( $tipo_datos === DateTime::class && $valor ) {
-                $objeto_json[$propiedad] = $valor->format(self::FECHA_HORA_USUARIO);
+                $objeto_json[$propiedad] = $valor->format(self::FECHA_HORA_MYSQL);
             }
             else {
                 $objeto_json[$propiedad] = $valor;

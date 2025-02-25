@@ -4,7 +4,7 @@ require_once($_SERVER['DOCUMENT_ROOT']. "/vendor/autoload.php");
 use util\HTML;
 
 HTML::inicio_html("Búsqueda de artículos", ["/estilos/general.css"],
-                  ["js/05xmlhttprequest.js"]);
+                  ["js/05fetch.js"]);
 ?>
 <h2>Búsqueda de artículos</h2>
 <input type="text" name="referencia" id="referencia" size="10">

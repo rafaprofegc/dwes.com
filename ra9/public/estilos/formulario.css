@@ -1,0 +1,32 @@
+fieldset {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+
+    justify-items: flex-start;
+    align-items: center;
+    gap: 0.2em;
+
+    margin-bottom: 1em;
+
+}
+
+label {
+    justify-self: flex-end;
+    
+    color: darkblue;
+}
+
+input, select, option, textarea, button {
+    padding: 0.2em;
+    font: inherit;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form img {
+    width: 128px;
+}

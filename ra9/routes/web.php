@@ -8,14 +8,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get("/articulos", [ControladorArticulo::class, "index"]);
+//Route::get("/articulos", [ControladorArticulo::class, "index"]);
 
 /*
 Route::get("/articulos/{ref}", function($ref) {
     return "Esto es para recuperar el artículo $ref";
 })->whereNumber("ref");
 */
-Route::get("/articulos/{ref}", [ControladorArticulo::class, "show"]);
+//Route::get("/articulos/{ref}", [ControladorArticulo::class, "show"]);
 
 
 /* Gestión del recurso: clientes */
@@ -64,3 +64,6 @@ Route::match(['get','post'], "/articulos", function() {
     return "La petición es get o post";
 });
 */
+
+// Controlador de recursos
+Route::resource("/articulos", ControladorArticulo::class);

@@ -1,4 +1,8 @@
 {!! App\Util\Html::inicio("Listado de artículos", ['estilos/general.css', 'estilos/tablas.css']); !!}
+<!-- Verificar si viene de la creación de un artículo -->
+@if( session('resultado') )
+<p class='negrita'>{{session('resultado')}}</p>
+@endif
 <h2>Listado de artículos</h2>
 <p>Artículos en la BBDD: {{ $numero }}</p>
 <table border="1">
@@ -13,6 +17,7 @@
             <th>Fecha disponible</th>
             <th>Categoría</th>
             <th>Tipo IVA</th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -29,6 +34,7 @@
                 <td>{{ $articulo->categoria}}</td>
                 <td>{{ $articulo->tipo_iva}}</td>
                 <td><a href="/articulos/{{$articulo->referencia}}">Ver</a></td>
+                <td><a href="/articulos/{{$articulo->referencia}}/edit">Actualizar</a></td>
             </tr>
         @endforeach
     </tbody>

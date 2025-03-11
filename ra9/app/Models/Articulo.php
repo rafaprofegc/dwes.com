@@ -14,6 +14,9 @@ class Articulo extends Model
     protected $keyType = 'array';
     */
 
+    // Actualizaciones masivas
+    protected $fillable = ['referencia', 'descripcion', 'pvp', 'dto_venta', 'und_vendidas',
+                           'und_disponibles', 'fecha_disponible', 'categoria', 'tipo_iva'];
     public $incrementing = false;
     public $timestamps = false;
 
@@ -28,5 +31,7 @@ class Articulo extends Model
             return "Sin disponibilidad";
         }
     }
+
+
     
 }

@@ -17,8 +17,7 @@
             <th>Fecha disponible</th>
             <th>Categoría</th>
             <th>Tipo IVA</th>
-            <th></th>
-            <th></th>
+            <th colspan="3">Operaciones</th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +34,13 @@
                 <td>{{ $articulo->tipo_iva}}</td>
                 <td><a href="/articulos/{{$articulo->referencia}}">Ver</a></td>
                 <td><a href="/articulos/{{$articulo->referencia}}/edit">Actualizar</a></td>
+                <td>
+                    <form method="POST" action="/articulos/{{$articulo->referencia}}">
+                        @csrf
+                        @method('DELETE')
+                        <input type="submit" value="Eliminar">
+                    </form>
+                </td>
             </tr>
         @endforeach
     </tbody>

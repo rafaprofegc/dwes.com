@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Articulo;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\ArticuloRequest;
 use App\Models\Categoria;
 
 class ControladorArticulo extends Controller
@@ -12,8 +12,10 @@ class ControladorArticulo extends Controller
     // Controlador artículos
 
     // Método para la ruta GET /articulos
-    public function index() {
+    public function index(Request $request) {
         $articulos = Articulo::all();
+
+        //$request->session()->put('clave','valor');
         //$articulos = Articulo::orderBy("descripcion")->take(10)->get();
         //$articulos = Articulo::where("descripcion", "like", "%kg%")->get();
         //$articulos = Articulo::where("pvp", "10")->get();
@@ -32,7 +34,9 @@ class ControladorArticulo extends Controller
             return view("articulos.show", ['articulo' => $articulo]);
         }
         catch( ModelNotFoundException $mnfe) {
-            return view("articulos.error", ['error' => ['mensaje' => "El artículo $referencia no existe"]]);
+            return view("error", ['error' => ['mensaje' => "El artículo $referencia no existe",
+                                              'enlace' => "/articulos",
+                                              'texto' => "Regresar a la lista de artículos"]]);
         }
     }
 
@@ -47,38 +51,8 @@ class ControladorArticulo extends Controller
                                        'articulo' => null]);
     }
 
-    public function store(Request $request) {
-        $reglasValidacion = [
-            'referencia'    => ['required', 'string', 'max:15', 'unique:articulo'],
-            'descripcion'   => 'required|string|max:50',
-            'pvp'           => 'required|numeric|min:0',
-            'dto_venta'     => 'nullable|numeric|min:0|max:100',
-            'und_disponibles' => 'nullable|numeric|min:0',
-            //'fecha_disponible' => ['nullable', 'date', 'date_format:Y-m-d', Rule::date
-            'fecha_disponible' => ['nullable', 'date', Rule::date('Y-m-d')->afterOrEqual(today())],
-            'categoria'     => 'required|string|exists:categoria,id_categoria',
-            'tipo_iva'      => ['nullable', 'string', Rule::in(['N','R','SR'])]
-        ];
-
-        $mensajesError = [ 
-            'referencia.required'    => "La referencia es un dato obligatorio",
-            'referencia.string'      => "La referencia es una cadena de caracteres",
-            'referencia.unique'      => "La referencia ya existe en la tabla artículo",
-            'referencia.max'         => "La referencia como máximo tiene 15 caracteres",
-            'descripcion'            => "La descripción tiene que ser como máximo 50 caracteres",
-            'pvp.min'                => "El PVP no puede ser negativo",
-            'pvp.numeric'            => "El PVP tiene que ser numérico",
-            'pvp.required'           => "El PVP es obligatorio",
-            'dto_venta'              => "El descuento es un número entre 0 y 100",
-            'und_disponibles'        => "Las unds disponibles es un número mayor que 0",
-            'fecha_disponible'       => "La fecha disponible tiene que estar en el futuro",
-            'categoria'              => "La categoria es obligatorio y tiene que existir",
-            'tipo_iva'               => "El tipo de iva es N, R o SR"
-        ];
-
-        // Realizamos la validación
-        $request->validate($reglasValidacion, $mensajesError );
-
+    public function store(ArticuloRequest $request) {
+        
         $articulo = new Articulo();
         $articulo->referencia = $request->referencia;
         $articulo->descripcion = $request->descripcion;
@@ -120,7 +94,7 @@ class ControladorArticulo extends Controller
 
             $direccion_envio = DireccionEnvio::where("nif", $nif)->where("id_dir_env", $id_dir_env)->first();
         */
-        
+
         if( $articulo ) {
             return view("articulos.form", ['categorias' => $categorias,
                                        'titulo' => 'Modificar un artículo',
@@ -133,13 +107,43 @@ class ControladorArticulo extends Controller
 
     }
 
-    public function update( Request $request) {
+    public function update( ArticuloRequest $request, string $referencia) {
         // Recibe los datos del formulario para actualizar un artículo
+
+        $articulo = Articulo::find($referencia);
+
+        $dto = $request->dto_venta;
+        if( $dto > 1 ) {
+            $dto = $dto / 100;
+        }
+        $request->dto_venta = $dto;
+
+        $datos = $request->all();
+        $datos['dto_venta'] = $dto;
+        $articulo->update($datos);
+
+        return redirect("/articulos")->with('resultado', "Artículo {$request->referencia} modificado con éxito");
+
+        /*
+        $articulo->referencia = $request->referencia;
+        $articulo->descripcion = $request->descripcion;
+        ...
+        */
+
+
+
     }
 
     public function destroy($referencia) {
 
         // Elimina el artículo con clave $referencia
+        // Articulo::destroy($referencia);
+
+        $articulo = Articulo::find($referencia);
+        if( $articulo ) {
+            $articulo->delete();
+            return redirect("/articulos")->with('resultado', "El artículo $referencia se ha borrado con éxito");
+        }
     }
 
 

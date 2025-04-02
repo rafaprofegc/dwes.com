@@ -1,0 +1,80 @@
+body {
+    font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    color: #343a40;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+p {
+    color: #6c757d;
+    font-size: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #dee2e6;
+}
+
+th, td {
+    text-align: center;
+    padding: 12px;
+}
+
+th {
+    background-color: darkslateblue;
+    color: #ffffff;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #e9ecef;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+input[type="submit"] {
+    background-color: darkslateblue;
+    color: white;
+
+    width: 50%;
+
+    padding: 10px 20px;
+    border-radius: 4px;
+
+    cursor: pointer;
+    font-size: 1em;
+}
+
+input[type="submit"]:hover {
+    background-color: #400d8b;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.Correcto {
+    font-weight: bold;
+    color: #28a745;
+}
+
+.error{
+    color: #f61500;
+}

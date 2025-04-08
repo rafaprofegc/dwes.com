@@ -124,21 +124,22 @@ function sanear_y_validar() {
     // Si falta algún dato, se termina
     $array_filtrado = array_filter($datos_validados);
 
-    // return count($array_filtrado) == 5 or 
-              count($array_filtrado) == 4 and !datos_validados['itv'];
-
+    //return count($array_filtrado) == 5 or 
+    //          count($array_filtrado) == 4 and !$datos_validados['itv'];
+    
     if( count($array_filtrado) < 4 or
         count($array_filtrado) == 4 and $datos_validados['itv']) {
-        
         return false;
     }
     else {
-        return true;
-    } 
-    
+        return $datos_validados;
+    }
+   
 }
 
-function mostrar_resultados() {
+function mostrar_resultados($datos_validados) {
+    global $tipos, $marcas;
+
     // Abrir archivo y comprobar los datos con los del archivo
     $archivo = fopen($_FILES['vd']['tmp_name'], "r");
     $linea = fgetcsv($archivo);
@@ -204,14 +205,13 @@ if( $_SERVER['REQUEST_METHOD'] == "POST") {
         exit($error);
     }
 
-    if( !sanear_y_validar() ) {
+    $datos_validados = sanear_y_validar();
+    if( !$datos_validados ) {
         echo "<h3>ErrorLos datos no están validados</h3>";   
         exit(4);
     }
 
-    mostrar_resultados();
-
-
+    mostrar_resultados($datos_validados);
 
     echo "<p><a href='{$_SERVER['PHP_SELF']}'>Volver al formulario de búsqueda</a><p>";    
 }
